@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ProductAI — Internal AI Agent Suite</title>
+<title>Mona — Internal AI Agent Suite</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet">
 <style>
 :root {
-  --navy: #0F1F3D;
-  --navy2: #1A2F5A;
+  --navy: #0A0F1E;
+  --navy2: #111827;
   --teal: #0D7A6A;
   --teal2: #1D9E75;
   --teal3: #9FE1CB;
@@ -21,17 +21,17 @@
   --blue: #185FA5;
   --blue2: #378ADD;
   --slate: #2D3F5E;
-  --bg: #F6F4F0;
-  --bg2: #EDEBE5;
-  --bg3: #E4E1D9;
-  --white: #FFFFFF;
-  --text: #1A1A18;
-  --text2: #4A4A46;
-  --text3: #7A7A74;
-  --border: rgba(26,26,24,0.1);
-  --border2: rgba(26,26,24,0.18);
-  --shadow: 0 2px 16px rgba(15,31,61,0.08);
-  --shadow2: 0 8px 40px rgba(15,31,61,0.14);
+  --bg: #141920;
+  --bg2: #1C2330;
+  --bg3: #242D3C;
+  --white: #1E2736;
+  --text: #E8EDF5;
+  --text2: #9BA8BB;
+  --text3: #5C6A7E;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+  --shadow: 0 2px 16px rgba(0,0,0,0.3);
+  --shadow2: 0 8px 40px rgba(0,0,0,0.45);
   --font: 'DM Sans', sans-serif;
   --font-serif: 'Fraunces', serif;
   --font-mono: 'DM Mono', monospace;
@@ -51,13 +51,13 @@ body {
 
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-track { background: var(--navy); }
 ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
 
 /* ── NAV ── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(246,244,240,0.92);
+  background: rgba(20,25,32,0.95);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
   height: 60px;
@@ -93,14 +93,14 @@ nav {
   font-weight: 400;
 }
 .nav-links a:hover, .nav-links a.active {
-  background: var(--bg2);
+  background: var(--bg3);
   color: var(--text);
   font-weight: 500;
 }
 .nav-cta {
   margin-left: 8px;
   padding: 7px 16px;
-  background: var(--navy2);
+  background: var(--teal2);
   color: white;
   border-radius: 8px;
   font-size: 13px;
@@ -109,7 +109,7 @@ nav {
   transition: all 0.15s;
   white-space: nowrap;
 }
-.nav-cta:hover { background: var(--navy); }
+.nav-cta:hover { background: var(--teal); }
 
 /* ── SECTIONS ── */
 section { padding: 80px 2rem; }
@@ -127,15 +127,15 @@ section { padding: 80px 2rem; }
 .hero-grid-bg {
   position: absolute; inset: 0;
   background-image:
-    linear-gradient(rgba(26,47,90,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(26,47,90,0.04) 1px, transparent 1px);
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
   background-size: 48px 48px;
   pointer-events: none;
 }
 .hero-glow {
   position: absolute;
   width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(13,122,106,0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(13,122,106,0.12) 0%, transparent 70%);
   top: 20%; right: -100px;
   pointer-events: none;
 }
@@ -182,7 +182,7 @@ section { padding: 80px 2rem; }
 }
 .btn-primary {
   padding: 12px 24px;
-  background: var(--navy2);
+  background: var(--teal2);
   color: white;
   border-radius: var(--r);
   font-size: 14px; font-weight: 500;
@@ -191,10 +191,10 @@ section { padding: 80px 2rem; }
   border: none; cursor: pointer;
   display: inline-flex; align-items: center; gap: 8px;
 }
-.btn-primary:hover { background: var(--navy); transform: translateY(-1px); }
+.btn-primary:hover { background: var(--teal); transform: translateY(-1px); }
 .btn-secondary {
   padding: 12px 24px;
-  background: transparent;
+  background: rgba(255,255,255,0.06);
   color: var(--text);
   border-radius: var(--r);
   font-size: 14px; font-weight: 500;
@@ -203,7 +203,7 @@ section { padding: 80px 2rem; }
   border: 1px solid var(--border2); cursor: pointer;
   display: inline-flex; align-items: center; gap: 8px;
 }
-.btn-secondary:hover { background: var(--bg2); }
+.btn-secondary:hover { background: rgba(255,255,255,0.1); }
 .hero-stats {
   display: flex; gap: 32px; margin-top: 40px;
 }
@@ -235,7 +235,7 @@ section { padding: 80px 2rem; }
 }
 .hc-dot { width: 10px; height: 10px; border-radius: 50%; }
 .hc-title { font-size: 12px; color: rgba(255,255,255,0.7); margin-left: 4px; font-weight: 400; }
-.hc-body { padding: 16px; }
+.hc-body { padding: 16px; background: var(--bg2); }
 .msg-row {
   display: flex; gap: 10px; margin-bottom: 12px;
   animation: fadeUp 0.5s ease both;
@@ -247,7 +247,7 @@ section { padding: 80px 2rem; }
   flex-shrink: 0;
 }
 .msg-bubble {
-  background: var(--bg2);
+  background: var(--bg3);
   border-radius: 4px 14px 14px 14px;
   padding: 9px 13px;
   font-size: 12px;
@@ -272,7 +272,7 @@ section { padding: 80px 2rem; }
 .typing {
   display: flex; gap: 4px; align-items: center;
   padding: 9px 13px;
-  background: var(--bg2);
+  background: var(--bg3);
   border-radius: 4px 14px 14px 14px;
   width: fit-content;
 }
@@ -288,7 +288,7 @@ section { padding: 80px 2rem; }
 /* floating chips */
 .hero-chip {
   position: absolute;
-  background: var(--white);
+  background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: 99px;
   padding: 7px 14px;
@@ -302,24 +302,24 @@ section { padding: 80px 2rem; }
 /* ── KPI STRIP ── */
 #kpis {
   padding: 40px 2rem;
-  background: var(--navy2);
+  background: #0D1117;
 }
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1px;
   max-width: 1100px; margin: 0 auto;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.06);
   border-radius: var(--r2);
   overflow: hidden;
 }
 .kpi-item {
-  background: var(--navy2);
+  background: #0D1117;
   padding: 28px 24px;
   text-align: center;
   transition: background 0.15s;
 }
-.kpi-item:hover { background: rgba(255,255,255,0.05); }
+.kpi-item:hover { background: rgba(255,255,255,0.04); }
 .kpi-n {
   font-family: var(--font-serif);
   font-size: 40px; font-weight: 300;
@@ -367,11 +367,11 @@ section { padding: 80px 2rem; }
   cursor: pointer;
   transition: all 0.15s;
 }
-.sprint-tab:hover { background: var(--bg2); }
+.sprint-tab:hover { background: var(--bg3); }
 .sprint-tab.active {
-  background: var(--navy2);
+  background: var(--teal2);
   color: white;
-  border-color: var(--navy2);
+  border-color: var(--teal2);
 }
 
 .cap-grid {
@@ -380,7 +380,7 @@ section { padding: 80px 2rem; }
   gap: 16px;
 }
 .cap-card {
-  background: var(--white);
+  background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: var(--r2);
   padding: 22px;
@@ -478,8 +478,8 @@ section { padding: 80px 2rem; }
   margin-bottom: 32px;
 }
 .bc-card {
-  background: var(--white);
-  border: 1px solid var(--border);
+  background: var(--bg2);
+  border: 1px solid var(--border2);
   border-radius: var(--r2);
   padding: 28px;
 }
@@ -523,14 +523,14 @@ section { padding: 80px 2rem; }
   margin-top: 24px;
 }
 .source-card {
-  background: var(--white);
+  background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: var(--r);
   padding: 16px;
 }
 .source-org {
   font-size: 11px; font-weight: 600;
-  color: var(--navy2); margin-bottom: 4px;
+  color: var(--teal3); margin-bottom: 4px;
   text-transform: uppercase; letter-spacing: 0.05em;
 }
 .source-stat {
@@ -551,14 +551,14 @@ section { padding: 80px 2rem; }
 .arch-layer {
   border-radius: var(--r2); overflow: hidden;
   border: 1px solid var(--border);
-  background: var(--white);
+  background: var(--bg2);
   transition: all 0.2s;
 }
 .arch-layer-head {
   display: flex; align-items: center; gap: 14px;
   padding: 16px 20px; cursor: pointer;
 }
-.arch-layer-head:hover { background: var(--bg); }
+.arch-layer-head:hover { background: var(--bg3); }
 .arch-layer-num {
   width: 28px; height: 28px;
   border-radius: 50%;
@@ -590,7 +590,7 @@ section { padding: 80px 2rem; }
   margin-top: 24px;
 }
 .tool-chip {
-  background: var(--white);
+  background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: 99px;
   padding: 8px 16px;
@@ -600,8 +600,8 @@ section { padding: 80px 2rem; }
   transition: all 0.15s;
 }
 .tool-chip:hover {
-  background: var(--navy2); color: white;
-  border-color: var(--navy2);
+  background: var(--teal2); color: white;
+  border-color: var(--teal2);
 }
 .tool-chip-dot {
   width: 7px; height: 7px; border-radius: 50%;
@@ -616,7 +616,7 @@ section { padding: 80px 2rem; }
   gap: 16px;
 }
 .sprint-card {
-  background: var(--white);
+  background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: var(--r2);
   padding: 24px;
@@ -680,7 +680,7 @@ section { padding: 80px 2rem; }
   display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
 }
 .jira-board {
-  background: var(--white);
+  background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: var(--r2); overflow: hidden;
 }
@@ -702,7 +702,7 @@ section { padding: 80px 2rem; }
   color: var(--text3); margin-bottom: 8px;
 }
 .jira-ticket {
-  background: var(--white);
+  background: var(--bg3);
   border: 1px solid var(--border);
   border-radius: 8px; padding: 10px;
   margin-bottom: 6px; font-size: 11px;
@@ -725,7 +725,7 @@ section { padding: 80px 2rem; }
   font-size: 8px; font-weight: 600; color: white;
 }
 .pd-insights {
-  background: var(--white);
+  background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: var(--r2); overflow: hidden;
 }
@@ -740,6 +740,7 @@ section { padding: 80px 2rem; }
   padding: 10px 12px;
   border-radius: 8px;
   border: 1px solid var(--border);
+  background: var(--bg3);
   margin-bottom: 8px;
   transition: all 0.15s;
 }
@@ -783,12 +784,12 @@ section { padding: 80px 2rem; }
 }
 .scale-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
 .scale-table td { padding: 10px 12px; font-size: 13px; }
-.scale-table tr:nth-child(even) { background: var(--bg); }
+.scale-table tr:nth-child(even) { background: var(--bg3); }
 .scale-table td:first-child { color: var(--text2); border-radius: 8px 0 0 8px; }
 .scale-table td:last-child { text-align: right; font-weight: 600; border-radius: 0 8px 8px 0; }
 
 /* ── REQUEST FORM ── */
-#request { background: var(--navy2); }
+#request { background: #0D1117; }
 .request-inner {
   display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
   align-items: start;
@@ -797,7 +798,7 @@ section { padding: 80px 2rem; }
 .request-left .sec-eyebrow { color: var(--teal3); }
 .request-left .sec-desc { color: rgba(255,255,255,0.6); }
 .form-card {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: var(--r2);
   padding: 28px;
@@ -812,7 +813,7 @@ section { padding: 80px 2rem; }
 }
 .form-input, .form-select, .form-textarea {
   width: 100%;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: var(--r);
   padding: 10px 14px;
@@ -867,7 +868,7 @@ section { padding: 80px 2rem; }
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
 }
 .capstone-card {
-  background: var(--white);
+  background: var(--bg2);
   border: 1px solid var(--border);
   border-radius: var(--r2);
   padding: 24px;
@@ -923,7 +924,7 @@ section { padding: 80px 2rem; }
   flex-shrink: 0;
 }
 .mm-node {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 10px; padding: 10px 14px;
   font-size: 11px; font-weight: 500;
@@ -934,7 +935,7 @@ section { padding: 80px 2rem; }
 
 /* ── FOOTER ── */
 footer {
-  background: var(--navy);
+  background: #0A0F1E;
   padding: 40px 2rem;
 }
 .footer-inner {
@@ -984,6 +985,217 @@ footer {
   nav { gap: 1rem; }
   .nav-links { display: none; }
 }
+
+/* ── DOCS TEAM ── */
+#docs { background: var(--bg); }
+.docs-hero {
+  background: var(--navy2);
+  border-radius: var(--r2);
+  padding: 40px 48px;
+  display: flex; align-items: center; gap: 48px;
+  margin-bottom: 32px;
+}
+.docs-hero-text h3 {
+  font-family: var(--font-serif);
+  font-size: 32px; font-weight: 300;
+  color: white; margin-bottom: 10px; line-height: 1.2;
+}
+.docs-hero-text h3 em { font-style: italic; color: var(--teal3); }
+.docs-hero-text p {
+  font-size: 14px; color: rgba(255,255,255,0.55);
+  line-height: 1.65; font-weight: 300; max-width: 480px;
+}
+.docs-stats {
+  display: flex; gap: 32px; flex-shrink: 0;
+}
+.docs-stat-n {
+  font-family: var(--font-serif);
+  font-size: 36px; font-weight: 300;
+  color: var(--teal3); line-height: 1; margin-bottom: 4px;
+}
+.docs-stat-l { font-size: 11px; color: rgba(255,255,255,0.4); }
+.docs-caps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.docs-cap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 20px 22px;
+  border-left: 4px solid var(--teal2);
+  transition: all 0.2s;
+}
+.docs-cap:hover {
+  box-shadow: var(--shadow2);
+  transform: translateY(-2px);
+}
+.docs-cap-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
+}
+.docs-cap-icon {
+  width: 36px; height: 36px; border-radius: 9px;
+  background: #E1F5EE;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.docs-cap-title { font-size: 14px; font-weight: 600; color: var(--text); }
+.docs-cap-tag { font-size: 10px; font-weight: 500; color: var(--teal); background: rgba(13,122,106,0.08); padding: 2px 8px; border-radius: 99px; display: inline-block; margin-top: 2px; }
+.docs-cap-desc { font-size: 12px; color: var(--text2); line-height: 1.6; font-weight: 300; margin-bottom: 12px; }
+.docs-cap-detail {
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-size: 11px; color: var(--text2);
+  line-height: 1.6; font-weight: 300;
+}
+.docs-cap-detail strong { color: var(--text); font-weight: 500; }
+.docs-workflow {
+  background: var(--bg3);
+  border-radius: var(--r2);
+  padding: 28px 32px;
+  margin-bottom: 24px;
+}
+.docs-workflow-title {
+  font-size: 13px; font-weight: 500; color: var(--text);
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+.docs-flow-steps {
+  display: flex; align-items: center; gap: 0; flex-wrap: wrap;
+}
+.docs-flow-step {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 12px;
+  min-width: 120px;
+}
+.docs-flow-step-num {
+  font-size: 10px; font-weight: 600; color: var(--teal);
+  font-family: var(--font-mono); margin-bottom: 3px;
+}
+.docs-flow-step-title { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.docs-flow-step-sub { color: var(--text3); font-size: 11px; font-weight: 300; }
+.docs-flow-arrow {
+  color: var(--teal2); font-size: 18px; padding: 0 10px;
+  flex-shrink: 0;
+}
+.docs-tools-row {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
+}
+.docs-pain-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px;
+}
+.docs-pain {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px 18px;
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.docs-pain-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: #FCEBEB;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.docs-pain-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.docs-pain-desc { font-size: 12px; color: var(--text2); line-height: 1.5; font-weight: 300; }
+.docs-pain-time { font-size: 11px; color: var(--amber); font-weight: 600; margin-top: 4px; }
+
+
+/* ── LIGHT THEME ── */
+body.light {
+  --bg: #F6F4F0;
+  --bg2: #EDEBE5;
+  --bg3: #E4E1D9;
+  --white: #FFFFFF;
+  --text: #1A1A18;
+  --text2: #4A4A46;
+  --text3: #7A7A74;
+  --border: rgba(26,26,24,0.1);
+  --border2: rgba(26,26,24,0.18);
+  --shadow: 0 2px 16px rgba(15,31,61,0.08);
+  --shadow2: 0 8px 40px rgba(15,31,61,0.14);
+}
+body.light nav {
+  background: rgba(246,244,240,0.95);
+}
+body.light #kpis,
+body.light .kpi-item {
+  background: #1A2F5A;
+}
+body.light #request {
+  background: #1A2F5A;
+}
+body.light .hero-grid-bg {
+  background-image:
+    linear-gradient(rgba(26,47,90,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,47,90,0.04) 1px, transparent 1px);
+}
+body.light .hero-glow {
+  background: radial-gradient(circle, rgba(13,122,106,0.08) 0%, transparent 70%);
+}
+body.light .hc-body {
+  background: var(--bg2);
+}
+body.light .msg-bubble {
+  background: var(--bg2);
+  color: var(--text);
+}
+body.light .typing {
+  background: var(--bg2);
+}
+body.light .hero-chip {
+  background: var(--white);
+}
+body.light footer {
+  background: #0F1F3D;
+}
+body.light .bc-card.dark {
+  background: #1A2F5A;
+}
+body.light .source-org {
+  color: #1A2F5A;
+}
+body.light .cap-card,
+body.light .arch-layer,
+body.light .sprint-card,
+body.light .jira-board,
+body.light .pd-insights,
+body.light .capstone-card,
+body.light .tool-chip,
+body.light .bc-card,
+body.light .source-card,
+body.light .docs-cap,
+body.light .docs-pain {
+  background: var(--white);
+}
+body.light .jira-ticket,
+body.light .pd-insight,
+body.light .docs-flow-step,
+body.light .docs-workflow {
+  background: var(--bg2);
+}
+body.light .arch-layer-head:hover {
+  background: var(--bg);
+}
+body.light .sprint-tab:hover { background: var(--bg2); }
+body.light .nav-links a:hover,
+body.light .nav-links a.active { background: var(--bg2); }
+body.light .tool-chip:hover { background: #1A2F5A; color: white; border-color: #1A2F5A; }
+body.light .scale-table tr:nth-child(even) { background: var(--bg); }
+body.light ::-webkit-scrollbar-track { background: var(--bg2); }
+body.light .docs-cap-detail { background: var(--bg); }
+body.light .mm-node { background: rgba(255,255,255,0.15); }
+
+/* smooth theme transition */
+body, body * {
+  transition: background-color 0.25s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
 </style>
 </head>
 <body>
@@ -991,8 +1203,8 @@ footer {
 <!-- ═══ NAV ═══ -->
 <nav>
   <a href="#hero" class="nav-logo">
-    <div class="nav-logo-mark">P</div>
-    <span class="nav-logo-text">ProductAI</span>
+    <div class="nav-logo-mark">M</div>
+    <span class="nav-logo-text">Mona</span>
   </a>
   <ul class="nav-links">
     <li><a href="#capabilities" class="active">Capabilities</a></li>
@@ -1002,8 +1214,18 @@ footer {
     <li><a href="#jira">Jira + Discovery</a></li>
     <li><a href="#costs">Costs</a></li>
     <li><a href="#capstone">Capstone</a></li>
+    <li><a href="#docs">Docs team</a></li>
     <li><a href="#request">Request</a></li>
   </ul>
+
+  <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" style="
+    background:transparent;border:0.5px solid var(--border2);border-radius:8px;
+    padding:5px 10px;cursor:pointer;font-size:13px;color:var(--text2);
+    display:flex;align-items:center;gap:6px;transition:all 0.15s;margin-left:8px;
+  " onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'">
+    <span id="theme-icon">☀️</span>
+    <span id="theme-label" style="font-size:12px;font-weight:500">Light</span>
+  </button>
   <a href="#request" class="nav-cta">Request a capability →</a>
 </nav>
 
@@ -1050,7 +1272,7 @@ footer {
           <div class="hc-dot" style="background:#FF5F57"></div>
           <div class="hc-dot" style="background:#FFBD2E"></div>
           <div class="hc-dot" style="background:#28C840"></div>
-          <span class="hc-title">ProductAI — Teams chat</span>
+          <span class="hc-title">Mona — Teams chat</span>
         </div>
         <div class="hc-body">
           <div class="msg-row" style="animation-delay:0.1s">
@@ -1245,7 +1467,7 @@ footer {
       <div class="jira-board">
         <div class="jira-board-header">
           <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><path d="M15.975 0C7.15 0 0 7.15 0 15.975s7.15 15.975 15.975 15.975S31.95 22.8 31.95 15.975 24.8 0 15.975 0z" fill="#2684FF"/><path d="M15.975 6.39l-9.585 9.585 9.585 9.585 9.585-9.585-9.585-9.585z" fill="url(#jira-grad)"/><defs><linearGradient id="jira-grad" x1="9.39" y1="15.975" x2="22.56" y2="15.975" gradientUnits="userSpaceOnUse"><stop stop-color="#0052CC"/><stop offset="1" stop-color="#2684FF"/></linearGradient></defs></svg>
-          <span class="jira-board-title">ProductAI — Sprint 1 board</span>
+          <span class="jira-board-title">Mona — Sprint 1 board</span>
         </div>
         <div style="padding:14px">
           <div class="jira-cols">
@@ -1364,7 +1586,7 @@ footer {
             </div>
           </div>
           <div style="padding:10px 0;font-size:11px;color:var(--text3);text-align:center;border-top:1px solid var(--border);margin-top:4px">
-            Synthesised weekly by ProductAI feedback synthesiser (Cap 8) · Updated Friday 4pm
+            Synthesised weekly by Mona feedback synthesiser (Cap 8) · Updated Friday 4pm
           </div>
         </div>
       </div>
@@ -1483,6 +1705,207 @@ footer {
   </div>
 </section>
 
+
+<!-- ═══ DOCUMENTATION TEAM ═══ -->
+<section id="docs">
+  <div class="container">
+    <div class="sec-header fade-in">
+      <div class="sec-eyebrow">Documentation team</div>
+      <h2 class="sec-title">From documentation<br><em>burden</em> to automation</h2>
+      <p class="sec-desc">Documentation teams spend 60%+ of their time on manual content production, version management, and cross-team coordination. Mona eliminates the repetitive work so the team can focus on quality and strategy.</p>
+    </div>
+
+    <div class="docs-hero fade-in">
+      <div class="docs-hero-text">
+        <h3>Docs used to take <em>weeks</em>.<br>Now it takes minutes.</h3>
+        <p>Every release ships with complete documentation — release notes, API guides, training materials, multi-audience versions — all produced automatically from Jira, Confluence, and Teams data. The documentation team reviews and approves. They no longer write from scratch.</p>
+      </div>
+      <div class="docs-stats">
+        <div>
+          <div class="docs-stat-n">2wk</div>
+          <div class="docs-stat-l">→ 90 min<br>training content</div>
+        </div>
+        <div>
+          <div class="docs-stat-n">4×</div>
+          <div class="docs-stat-l">versions from<br>one brief</div>
+        </div>
+        <div>
+          <div class="docs-stat-n">$0</div>
+          <div class="docs-stat-l">extra cost for<br>docs team</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-eyebrow fade-in" style="margin-bottom:16px">Current pain points — solved by Mona</div>
+    <div class="docs-pain-grid fade-in">
+      <div class="docs-pain">
+        <div class="docs-pain-icon">✍️</div>
+        <div>
+          <div class="docs-pain-title">Writing release notes from scratch every release</div>
+          <div class="docs-pain-desc">Manually reading Jira tickets, grouping by type, writing customer-facing descriptions, formatting, reviewing. Repeated for every release.</div>
+          <div class="docs-pain-time">Eliminated — automated by Cap 06 Release Notes Autopilot</div>
+        </div>
+      </div>
+      <div class="docs-pain">
+        <div class="docs-pain-icon">🔄</div>
+        <div>
+          <div class="docs-pain-title">Rewriting the same content for different audiences</div>
+          <div class="docs-pain-desc">The same product update rewritten 4 times: technical for engineering, value-focused for sales, FAQ-style for support, executive summary for leadership.</div>
+          <div class="docs-pain-time">Eliminated — automated by Cap 11 Multi-Audience Comms Engine</div>
+        </div>
+      </div>
+      <div class="docs-pain">
+        <div class="docs-pain-icon">🎬</div>
+        <div>
+          <div class="docs-pain-title">Producing training videos and guides per feature</div>
+          <div class="docs-pain-desc">Script writing, narration recording, video editing, uploading to learning platform. 2-week process per feature. Means most features ship with no training content at all.</div>
+          <div class="docs-pain-time">Eliminated — automated by Cap 23 Video Training Pipeline</div>
+        </div>
+      </div>
+      <div class="docs-pain">
+        <div class="docs-pain-icon">🔍</div>
+        <div>
+          <div class="docs-pain-title">Keeping Confluence up to date manually</div>
+          <div class="docs-pain-desc">Checking which docs are stale, finding what changed in Jira, updating Confluence pages, notifying stakeholders. A full-time task nobody has time for.</div>
+          <div class="docs-pain-time">Eliminated — automated by Cap 03 AI Info Directory + weekly digest</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-eyebrow fade-in" style="margin-bottom:16px">6 capabilities built specifically for documentation teams</div>
+    <div class="docs-caps-grid fade-in">
+
+      <div class="docs-cap">
+        <div class="docs-cap-header">
+          <div class="docs-cap-icon">📋</div>
+          <div>
+            <div class="docs-cap-title">Release notes autopilot</div>
+            <span class="docs-cap-tag">Cap 06 · Sprint 2</span>
+          </div>
+        </div>
+        <div class="docs-cap-desc">Jira webhook fires on version released. GPT-4o reads every resolved ticket, groups by type (new features, improvements, bug fixes), writes customer-facing descriptions in your house style. Word doc to SharePoint. Confluence page published. Teams notification sent.</div>
+        <div class="docs-cap-detail"><strong>Input:</strong> Jira version release event<br><strong>Output:</strong> Word doc + Confluence page + Teams notification<br><strong>Time saved:</strong> 3–4 hours per release, every release</div>
+      </div>
+
+      <div class="docs-cap">
+        <div class="docs-cap-header">
+          <div class="docs-cap-icon">📣</div>
+          <div>
+            <div class="docs-cap-title">Multi-audience comms engine</div>
+            <span class="docs-cap-tag">Cap 11 · Sprint 2</span>
+          </div>
+        </div>
+        <div class="docs-cap-desc">Submit one product brief. Mona generates 4 tailored versions in parallel: technical deep-dive for engineering, value proposition for sales, FAQ-style for customer support, and executive summary for leadership. All published to Confluence simultaneously with a Teams card linking all 4.</div>
+        <div class="docs-cap-detail"><strong>Input:</strong> One product brief in Teams chat<br><strong>Output:</strong> 4 Confluence pages, Teams card<br><strong>Time saved:</strong> 3 hours per release communication</div>
+      </div>
+
+      <div class="docs-cap">
+        <div class="docs-cap-header">
+          <div class="docs-cap-icon">🎬</div>
+          <div>
+            <div class="docs-cap-title">Video training pipeline</div>
+            <span class="docs-cap-tag">Cap 23 · Sprint 4</span>
+          </div>
+        </div>
+        <div class="docs-cap-desc">Point Mona at any Jira epic. GPT-4o writes a structured training script with chapters and learning objectives. Azure AI Speech narrates using a neural voice. Clipchamp assembles the video. Uploaded to Viva Learning as a course. End-to-end: 90 minutes.</div>
+        <div class="docs-cap-detail"><strong>Input:</strong> Jira epic key<br><strong>Output:</strong> Narrated video in Viva Learning<br><strong>Time saved:</strong> 2 weeks → 90 minutes per module</div>
+      </div>
+
+      <div class="docs-cap">
+        <div class="docs-cap-header">
+          <div class="docs-cap-icon">🌐</div>
+          <div>
+            <div class="docs-cap-title">Multilingual content engine</div>
+            <span class="docs-cap-tag">Cap 20 · Sprint 4</span>
+          </div>
+        </div>
+        <div class="docs-cap-desc">Every document Mona produces — release notes, training scripts, meeting minutes, morning briefs — auto-translated to French Canadian via Azure AI Translator immediately after creation. Bilingual compliance maintained automatically. EN and FR versions stored side-by-side in SharePoint.</div>
+        <div class="docs-cap-detail"><strong>Input:</strong> Any Mona-created document<br><strong>Output:</strong> EN + FR versions in SharePoint<br><strong>Time saved:</strong> Translation backlog eliminated</div>
+      </div>
+
+      <div class="docs-cap">
+        <div class="docs-cap-header">
+          <div class="docs-cap-icon">🔍</div>
+          <div>
+            <div class="docs-cap-title">Azure AI Search knowledge index</div>
+            <span class="docs-cap-tag">Cap 22 · Sprint 4</span>
+          </div>
+        </div>
+        <div class="docs-cap-desc">All Confluence pages, SharePoint docs, meeting minutes, and training videos indexed semantically. Any team member — or the docs team themselves — can ask "what is our API deprecation policy?" and get the exact section, page link, and confidence score. Video timestamp search included.</div>
+        <div class="docs-cap-detail"><strong>Input:</strong> Natural language question<br><strong>Output:</strong> Answer with source + Confluence link<br><strong>Time saved:</strong> 9.3h/person/week of document searching</div>
+      </div>
+
+      <div class="docs-cap">
+        <div class="docs-cap-header">
+          <div class="docs-cap-icon">📊</div>
+          <div>
+            <div class="docs-cap-title">Confluence weekly digest</div>
+            <span class="docs-cap-tag">Custom · Sprint 1</span>
+          </div>
+        </div>
+        <div class="docs-cap-desc">Every Monday 8:30am: Mona scans all Confluence spaces for pages updated in the last 7 days. GPT-4o summarises what changed, why it matters, and which docs may need updating as a result. Posted to the documentation team channel. Stale content flagged automatically.</div>
+        <div class="docs-cap-detail"><strong>Input:</strong> Confluence REST API — last 7 days<br><strong>Output:</strong> Monday morning Teams digest<br><strong>Time saved:</strong> Weekly content audit eliminated</div>
+      </div>
+
+    </div>
+
+    <div class="docs-workflow fade-in">
+      <div class="docs-workflow-title">
+        <span style="background:#E1F5EE;border-radius:99px;padding:3px 10px;font-size:11px;color:#085041;font-weight:500">End-to-end release documentation workflow — fully automated</span>
+      </div>
+      <div class="docs-flow-steps">
+        <div class="docs-flow-step">
+          <div class="docs-flow-step-num">01</div>
+          <div class="docs-flow-step-title">Jira release</div>
+          <div class="docs-flow-step-sub">Version marked<br>released</div>
+        </div>
+        <div class="docs-flow-arrow">→</div>
+        <div class="docs-flow-step">
+          <div class="docs-flow-step-num">02</div>
+          <div class="docs-flow-step-title">Tickets fetched</div>
+          <div class="docs-flow-step-sub">All resolved issues<br>grouped by type</div>
+        </div>
+        <div class="docs-flow-arrow">→</div>
+        <div class="docs-flow-step">
+          <div class="docs-flow-step-num">03</div>
+          <div class="docs-flow-step-title">GPT-4o writes</div>
+          <div class="docs-flow-step-sub">4 audience versions<br>simultaneously</div>
+        </div>
+        <div class="docs-flow-arrow">→</div>
+        <div class="docs-flow-step">
+          <div class="docs-flow-step-num">04</div>
+          <div class="docs-flow-step-title">EN + FR</div>
+          <div class="docs-flow-step-sub">Azure Translator<br>auto-applied</div>
+        </div>
+        <div class="docs-flow-arrow">→</div>
+        <div class="docs-flow-step">
+          <div class="docs-flow-step-num">05</div>
+          <div class="docs-flow-step-title">Docs review</div>
+          <div class="docs-flow-step-sub">Teams approval<br>card — 1 click</div>
+        </div>
+        <div class="docs-flow-arrow">→</div>
+        <div class="docs-flow-step">
+          <div class="docs-flow-step-num">06</div>
+          <div class="docs-flow-step-title">Published</div>
+          <div class="docs-flow-step-sub">Confluence + Word<br>+ Viva Learning</div>
+        </div>
+      </div>
+      <div class="docs-tools-row">
+        <span class="badge badge-blue">Jira webhook</span>
+        <span class="badge badge-teal">Azure OpenAI GPT-4o</span>
+        <span class="badge badge-teal">Azure AI Translator</span>
+        <span class="badge badge-purple">Confluence API</span>
+        <span class="badge badge-navy">Word Online</span>
+        <span class="badge badge-gray">Teams approval card</span>
+        <span class="badge badge-gray">Viva Learning</span>
+        <span class="badge badge-gray">Microsoft Purview</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
 <!-- ═══ REQUEST ═══ -->
 <section id="request">
   <div class="container">
@@ -1546,7 +1969,7 @@ footer {
           <input class="form-input" id="f-name" type="text" placeholder="Alex Chen">
         </div>
         <button class="form-submit" onclick="submitRequest()">Submit to Jira Product Discovery →</button>
-        <div class="form-note">Goes to the ProductAI backlog · reviewed every Friday · top insights become next sprint</div>
+        <div class="form-note">Goes to the Mona backlog · reviewed every Friday · top insights become next sprint</div>
       </div>
     </div>
   </div>
@@ -1556,7 +1979,7 @@ footer {
 <footer>
   <div class="footer-inner">
     <div class="footer-left">
-      <strong>ProductAI</strong> — Internal AI agent suite · Product enablement internship capstone · Built on Microsoft 365 E5 + Copilot Studio + Azure OpenAI · June 2026
+      <strong>Mona</strong> — Internal AI agent suite · Product enablement internship capstone · Built on Microsoft 365 E5 + Copilot Studio + Azure OpenAI · June 2026
     </div>
     <div class="footer-links">
       <a href="#capabilities">Capabilities</a>
@@ -1597,7 +2020,7 @@ const caps = [
    usecase:"Leadership sees sprint status without asking — daily, automatically",
    saving:"3h/week reporting",day:"Day 4 · 2h",tools:["Jira","Azure OpenAI","Teams","Power BI"]},
   {num:"05",sprint:"s1",type:"daily",color:"green",icon:"📝",name:"Meeting chat capture",
-   desc:"@ProductAI action: [text] / [owner] during any Teams meeting. Captured instantly to SharePoint. End-of-meeting summary posted to channel with all actions grouped by owner.",
+   desc:"@Mona action: [text] / [owner] during any Teams meeting. Captured instantly to SharePoint. End-of-meeting summary posted to channel with all actions grouped by owner.",
    auto:"No note-taker needed — actions logged live",
    usecase:"Sprint reviews and planning — actions captured with owners automatically",
    saving:"2h/meeting admin",day:"Day 5 · 2h",tools:["SharePoint","Copilot Studio topic","Teams"]},
@@ -1901,7 +2324,7 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
 /* ── NAV ACTIVE STATE ── */
 window.addEventListener('scroll', () => {
-  const sections = ['capabilities','business','architecture','sprints','jira','costs','capstone','request'];
+  const sections = ['capabilities','business','architecture','sprints','jira','costs','docs','capstone','request'];
   const scrollY = window.scrollY + 80;
   sections.forEach(id => {
     const el = document.getElementById(id);
@@ -1913,6 +2336,28 @@ window.addEventListener('scroll', () => {
     }
   });
 });
+
+
+/* ── THEME TOGGLE ── */
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light');
+  document.getElementById('theme-icon').textContent = isLight ? '🌙' : '☀️';
+  document.getElementById('theme-label').textContent = isLight ? 'Dark' : 'Light';
+  localStorage.setItem('mona-theme', isLight ? 'light' : 'dark');
+}
+// Restore saved preference
+(function() {
+  const saved = localStorage.getItem('mona-theme');
+  if (saved === 'light') {
+    document.body.classList.add('light');
+    document.addEventListener('DOMContentLoaded', function() {
+      var icon = document.getElementById('theme-icon');
+      var label = document.getElementById('theme-label');
+      if (icon) icon.textContent = '🌙';
+      if (label) label.textContent = 'Dark';
+    });
+  }
+})();
 
 /* ── INIT ── */
 renderCaps('all');
