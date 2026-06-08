@@ -3,1361 +3,634 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mona — Internal AI Agent Suite</title>
+<title>Mona — AI Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet">
 <style>
 :root {
-  --navy: #0A0F1E;
-  --navy2: #111827;
-  --teal: #0D7A6A;
-  --teal2: #1D9E75;
-  --teal3: #9FE1CB;
-  --amber: #C47D0E;
-  --amber2: #EF9F27;
-  --purple: #5240B5;
-  --purple2: #7F77DD;
-  --blue: #185FA5;
-  --blue2: #378ADD;
-  --slate: #2D3F5E;
-  --bg: #141920;
-  --bg2: #1C2330;
-  --bg3: #242D3C;
-  --white: #1E2736;
-  --text: #E8EDF5;
-  --text2: #9BA8BB;
-  --text3: #5C6A7E;
-  --border: rgba(255,255,255,0.06);
-  --border2: rgba(255,255,255,0.12);
-  --shadow: 0 2px 16px rgba(0,0,0,0.3);
-  --shadow2: 0 8px 40px rgba(0,0,0,0.45);
-  --font: 'DM Sans', sans-serif;
-  --font-serif: 'Fraunces', serif;
-  --font-mono: 'DM Mono', monospace;
-  --r: 12px;
-  --r2: 20px;
+  --bg:#141920;--bg2:#1C2330;--bg3:#242D3C;--bg4:#2C3649;
+  --text:#E8EDF5;--text2:#9BA8BB;--text3:#5C6A7E;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.12);
+  --teal:#0D7A6A;--teal2:#1D9E75;--teal3:#9FE1CB;
+  --amber:#C47D0E;--amber2:#EF9F27;
+  --purple:#5240B5;--purple2:#7F77DD;
+  --blue:#185FA5;--blue2:#378ADD;
+  --navy:#0A0F1E;--navy2:#111827;
+  --pink:#D4537E;--pink2:#ED93B1;
+  --font:'DM Sans',sans-serif;
+  --serif:'Fraunces',serif;
+  --mono:'DM Mono',monospace;
+  --r:12px;--r2:20px;
+  --shadow:0 2px 16px rgba(0,0,0,0.3);
+  --shadow2:0 8px 40px rgba(0,0,0,0.45);
 }
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--navy); }
-::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
-
-/* ── NAV ── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(20,25,32,0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  height: 60px;
-  display: flex; align-items: center;
-  padding: 0 2rem;
-  gap: 2rem;
-}
-.nav-logo {
-  display: flex; align-items: center; gap: 10px;
-  text-decoration: none;
-}
-.nav-logo-mark {
-  width: 32px; height: 32px; background: var(--navy2);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; color: white; font-weight: 600;
-  flex-shrink: 0;
-}
-.nav-logo-text {
-  font-size: 15px; font-weight: 600; color: var(--text);
-  letter-spacing: -0.02em;
-}
-.nav-links {
-  display: flex; gap: 4px; margin-left: auto;
-  list-style: none;
-}
-.nav-links a {
-  text-decoration: none;
-  font-size: 13px; color: var(--text2);
-  padding: 5px 12px;
-  border-radius: 8px;
-  transition: all 0.15s;
-  font-weight: 400;
-}
-.nav-links a:hover, .nav-links a.active {
-  background: var(--bg3);
-  color: var(--text);
-  font-weight: 500;
-}
-.nav-cta {
-  margin-left: 8px;
-  padding: 7px 16px;
-  background: var(--teal2);
-  color: white;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.15s;
-  white-space: nowrap;
-}
-.nav-cta:hover { background: var(--teal); }
-
-/* ── SECTIONS ── */
-section { padding: 80px 2rem; }
-.container { max-width: 1100px; margin: 0 auto; }
-
-/* ── HERO ── */
-#hero {
-  min-height: 100vh;
-  display: flex; align-items: center;
-  padding-top: 60px;
-  background: var(--bg);
-  position: relative;
-  overflow: hidden;
-}
-.hero-grid-bg {
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 48px 48px;
-  pointer-events: none;
-}
-.hero-glow {
-  position: absolute;
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(13,122,106,0.12) 0%, transparent 70%);
-  top: 20%; right: -100px;
-  pointer-events: none;
-}
-.hero-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 64px;
-  align-items: center;
-  max-width: 1100px; margin: 0 auto; width: 100%;
-}
-.hero-eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 11px; font-weight: 500; color: var(--teal);
-  background: rgba(13,122,106,0.08);
-  border: 1px solid rgba(13,122,106,0.2);
-  padding: 4px 12px;
-  border-radius: 99px;
-  text-transform: uppercase; letter-spacing: 0.06em;
-  margin-bottom: 20px;
-}
-.hero-title {
-  font-family: var(--font-serif);
-  font-size: 56px;
-  font-weight: 300;
-  line-height: 1.06;
-  color: var(--text);
-  letter-spacing: -0.02em;
-  margin-bottom: 20px;
-}
-.hero-title em {
-  font-style: italic;
-  color: var(--teal);
-}
-.hero-desc {
-  font-size: 16px;
-  color: var(--text2);
-  line-height: 1.65;
-  margin-bottom: 32px;
-  font-weight: 300;
-  max-width: 440px;
-}
-.hero-actions {
-  display: flex; gap: 12px; flex-wrap: wrap;
-}
-.btn-primary {
-  padding: 12px 24px;
-  background: var(--teal2);
-  color: white;
-  border-radius: var(--r);
-  font-size: 14px; font-weight: 500;
-  text-decoration: none;
-  transition: all 0.15s;
-  border: none; cursor: pointer;
-  display: inline-flex; align-items: center; gap: 8px;
-}
-.btn-primary:hover { background: var(--teal); transform: translateY(-1px); }
-.btn-secondary {
-  padding: 12px 24px;
-  background: rgba(255,255,255,0.06);
-  color: var(--text);
-  border-radius: var(--r);
-  font-size: 14px; font-weight: 500;
-  text-decoration: none;
-  transition: all 0.15s;
-  border: 1px solid var(--border2); cursor: pointer;
-  display: inline-flex; align-items: center; gap: 8px;
-}
-.btn-secondary:hover { background: rgba(255,255,255,0.1); }
-.hero-stats {
-  display: flex; gap: 32px; margin-top: 40px;
-}
-.hero-stat-n {
-  font-family: var(--font-serif);
-  font-size: 36px; font-weight: 300;
-  color: var(--teal); line-height: 1;
-  margin-bottom: 4px;
-}
-.hero-stat-l {
-  font-size: 12px; color: var(--text3); font-weight: 400;
-}
-
-/* Hero visual panel */
-.hero-visual {
-  position: relative;
-}
-.hero-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  overflow: hidden;
-  box-shadow: var(--shadow2);
-}
-.hc-header {
-  background: var(--navy2);
-  padding: 14px 18px;
-  display: flex; align-items: center; gap: 10px;
-}
-.hc-dot { width: 10px; height: 10px; border-radius: 50%; }
-.hc-title { font-size: 12px; color: rgba(255,255,255,0.7); margin-left: 4px; font-weight: 400; }
-.hc-body { padding: 16px; background: var(--bg2); }
-.msg-row {
-  display: flex; gap: 10px; margin-bottom: 12px;
-  animation: fadeUp 0.5s ease both;
-}
-.msg-avatar {
-  width: 28px; height: 28px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 600;
-  flex-shrink: 0;
-}
-.msg-bubble {
-  background: var(--bg3);
-  border-radius: 4px 14px 14px 14px;
-  padding: 9px 13px;
-  font-size: 12px;
-  color: var(--text);
-  line-height: 1.55;
-  max-width: 280px;
-}
-.msg-bubble.bot {
-  background: rgba(13,122,106,0.07);
-  border-radius: 14px 4px 14px 14px;
-  border: 1px solid rgba(13,122,106,0.12);
-}
-.msg-bubble strong { color: var(--navy2); font-weight: 600; }
-.msg-bubble .tag {
-  display: inline-block;
-  background: rgba(13,122,106,0.1);
-  color: var(--teal);
-  font-size: 10px; font-weight: 500;
-  padding: 2px 7px; border-radius: 99px;
-  margin-top: 5px; margin-right: 3px;
-}
-.typing {
-  display: flex; gap: 4px; align-items: center;
-  padding: 9px 13px;
-  background: var(--bg3);
-  border-radius: 4px 14px 14px 14px;
-  width: fit-content;
-}
-.typing span {
-  width: 6px; height: 6px; background: var(--text3);
-  border-radius: 50%; animation: bounce 1.2s infinite;
-}
-.typing span:nth-child(2) { animation-delay: 0.2s; }
-.typing span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
-@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-
-/* floating chips */
-.hero-chip {
-  position: absolute;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 99px;
-  padding: 7px 14px;
-  font-size: 12px; font-weight: 500;
-  box-shadow: var(--shadow);
-  display: flex; align-items: center; gap: 7px;
-  white-space: nowrap;
-}
-.chip-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal2); }
-
-/* ── KPI STRIP ── */
-#kpis {
-  padding: 40px 2rem;
-  background: #0D1117;
-}
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1px;
-  max-width: 1100px; margin: 0 auto;
-  background: rgba(255,255,255,0.06);
-  border-radius: var(--r2);
-  overflow: hidden;
-}
-.kpi-item {
-  background: #0D1117;
-  padding: 28px 24px;
-  text-align: center;
-  transition: background 0.15s;
-}
-.kpi-item:hover { background: rgba(255,255,255,0.04); }
-.kpi-n {
-  font-family: var(--font-serif);
-  font-size: 40px; font-weight: 300;
-  color: var(--teal3);
-  line-height: 1; margin-bottom: 8px;
-}
-.kpi-l { font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 400; }
-
-/* ── SECTION HEADER ── */
-.sec-header {
-  margin-bottom: 48px;
-}
-.sec-eyebrow {
-  font-size: 11px; font-weight: 500;
-  color: var(--teal); text-transform: uppercase;
-  letter-spacing: 0.08em; margin-bottom: 12px;
-}
-.sec-title {
-  font-family: var(--font-serif);
-  font-size: 40px; font-weight: 300;
-  color: var(--text); line-height: 1.12;
-  letter-spacing: -0.02em; margin-bottom: 14px;
-}
-.sec-title em { font-style: italic; color: var(--teal); }
-.sec-desc {
-  font-size: 16px; color: var(--text2);
-  line-height: 1.65; font-weight: 300;
-  max-width: 540px;
-}
-
-/* ── CAPABILITIES ── */
-#capabilities { background: var(--bg); }
-
-.sprint-tabs {
-  display: flex; gap: 6px; flex-wrap: wrap;
-  margin-bottom: 32px;
-}
-.sprint-tab {
-  padding: 7px 16px;
-  border-radius: 99px;
-  font-size: 12px; font-weight: 500;
-  border: 1px solid var(--border2);
-  background: transparent;
-  color: var(--text2);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.sprint-tab:hover { background: var(--bg3); }
-.sprint-tab.active {
-  background: var(--teal2);
-  color: white;
-  border-color: var(--teal2);
-}
-
-.cap-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-}
-.cap-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 22px;
-  transition: all 0.2s;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.cap-card::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  opacity: 0; transition: opacity 0.2s;
-}
-.cap-card:hover {
-  box-shadow: var(--shadow2);
-  transform: translateY(-2px);
-  border-color: var(--border2);
-}
-.cap-card:hover::before { opacity: 1; }
-.cap-card[data-color="teal"]::before { background: var(--teal2); }
-.cap-card[data-color="amber"]::before { background: var(--amber2); }
-.cap-card[data-color="purple"]::before { background: var(--purple2); }
-.cap-card[data-color="blue"]::before { background: var(--blue2); }
-.cap-card[data-color="green"]::before { background: #639922; }
-.cap-card[data-color="red"]::before { background: #E24B4A; }
-.cap-card-top {
-  display: flex; justify-content: space-between;
-  align-items: flex-start; margin-bottom: 14px;
-}
-.cap-icon {
-  width: 42px; height: 42px;
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
-}
-.cap-badges { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
-.badge {
-  font-size: 10px; font-weight: 500;
-  padding: 3px 9px; border-radius: 99px;
-}
-.badge-teal { background: rgba(13,122,106,0.1); color: var(--teal); }
-.badge-amber { background: rgba(196,125,14,0.1); color: var(--amber); }
-.badge-purple { background: rgba(82,64,181,0.1); color: var(--purple); }
-.badge-blue { background: rgba(24,95,165,0.1); color: var(--blue); }
-.badge-green { background: rgba(99,153,34,0.1); color: #3B6D11; }
-.badge-gray { background: var(--bg2); color: var(--text3); }
-.badge-navy { background: rgba(26,47,90,0.08); color: var(--navy2); }
-.cap-num {
-  font-size: 11px; font-weight: 500;
-  color: var(--text3); font-family: var(--font-mono);
-  margin-bottom: 6px;
-}
-.cap-name {
-  font-size: 15px; font-weight: 600;
-  color: var(--text); margin-bottom: 6px;
-  letter-spacing: -0.01em;
-}
-.cap-desc {
-  font-size: 13px; color: var(--text2);
-  line-height: 1.6; font-weight: 300;
-  margin-bottom: 14px;
-}
-.cap-row {
-  display: flex; gap: 12px; margin-bottom: 10px;
-}
-.cap-row-label {
-  font-size: 10px; font-weight: 500;
-  color: var(--text3); text-transform: uppercase;
-  letter-spacing: 0.05em; min-width: 50px;
-  padding-top: 2px; flex-shrink: 0;
-}
-.cap-row-val {
-  font-size: 12px; color: var(--text2); line-height: 1.5;
-}
-.cap-footer {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-top: 14px; padding-top: 14px;
-  border-top: 1px solid var(--border);
-}
-.cap-saving {
-  font-size: 13px; font-weight: 600; color: var(--teal);
-}
-.cap-day {
-  font-size: 11px; color: var(--text3);
-  font-family: var(--font-mono);
-}
-.cap-hidden { display: none; }
-
-/* ── BUSINESS CASE ── */
-#business { background: var(--bg2); }
-.bc-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-bottom: 32px;
-}
-.bc-card {
-  background: var(--bg2);
-  border: 1px solid var(--border2);
-  border-radius: var(--r2);
-  padding: 28px;
-}
-.bc-card.dark {
-  background: var(--navy2);
-  border-color: transparent;
-}
-.bc-card-title {
-  font-size: 12px; font-weight: 500;
-  color: var(--text3); text-transform: uppercase;
-  letter-spacing: 0.06em; margin-bottom: 20px;
-}
-.bc-card.dark .bc-card-title { color: rgba(255,255,255,0.4); }
-.roi-number {
-  font-family: var(--font-serif);
-  font-size: 72px; font-weight: 300;
-  color: var(--teal3); line-height: 1;
-  margin-bottom: 8px;
-}
-.roi-label {
-  font-size: 14px; color: rgba(255,255,255,0.6);
-  font-weight: 300;
-}
-.stat-table { width: 100%; border-collapse: collapse; }
-.stat-table tr { border-bottom: 1px solid var(--border); }
-.stat-table tr:last-child { border-bottom: none; }
-.stat-table td {
-  padding: 9px 0; font-size: 13px;
-}
-.stat-table td:first-child { color: var(--text2); font-weight: 300; }
-.stat-table td:last-child {
-  text-align: right; font-weight: 600;
-  color: var(--text);
-}
-.stat-table td.green { color: var(--teal); }
-.stat-table td.amber { color: var(--amber); }
-.sources-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
-  margin-top: 24px;
-}
-.source-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 16px;
-}
-.source-org {
-  font-size: 11px; font-weight: 600;
-  color: var(--teal3); margin-bottom: 4px;
-  text-transform: uppercase; letter-spacing: 0.05em;
-}
-.source-stat {
-  font-family: var(--font-serif);
-  font-size: 24px; font-weight: 300;
-  color: var(--teal); margin-bottom: 4px;
-}
-.source-desc {
-  font-size: 11px; color: var(--text3);
-  line-height: 1.4; font-weight: 300;
-}
-
-/* ── ARCHITECTURE ── */
-#architecture { background: var(--bg); }
-.arch-layers {
-  display: flex; flex-direction: column; gap: 8px;
-}
-.arch-layer {
-  border-radius: var(--r2); overflow: hidden;
-  border: 1px solid var(--border);
-  background: var(--bg2);
-  transition: all 0.2s;
-}
-.arch-layer-head {
-  display: flex; align-items: center; gap: 14px;
-  padding: 16px 20px; cursor: pointer;
-}
-.arch-layer-head:hover { background: var(--bg3); }
-.arch-layer-num {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 600;
-  flex-shrink: 0;
-}
-.arch-layer-title {
-  font-size: 14px; font-weight: 500; color: var(--text);
-}
-.arch-layer-sub {
-  font-size: 12px; color: var(--text3);
-  margin-top: 2px; font-weight: 300;
-}
-.arch-layer-tools {
-  display: flex; gap: 6px; flex-wrap: wrap;
-  margin-left: auto;
-}
-.arch-body {
-  display: none; padding: 0 20px 20px;
-  border-top: 1px solid var(--border);
-  font-size: 13px; color: var(--text2);
-  line-height: 1.65; font-weight: 300;
-}
-.arch-body.open { display: block; padding-top: 16px; }
-
-.tool-chips {
-  display: flex; gap: 8px; flex-wrap: wrap;
-  margin-top: 24px;
-}
-.tool-chip {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 99px;
-  padding: 8px 16px;
-  font-size: 12px; font-weight: 500;
-  color: var(--text2);
-  display: flex; align-items: center; gap: 8px;
-  transition: all 0.15s;
-}
-.tool-chip:hover {
-  background: var(--teal2); color: white;
-  border-color: var(--teal2);
-}
-.tool-chip-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  flex-shrink: 0;
-}
-
-/* ── SPRINT PLAN ── */
-#sprints { background: var(--bg2); }
-.sprint-timeline {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
-}
-.sprint-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 24px;
-  position: relative;
-  overflow: hidden;
-}
-.sprint-card::after {
-  content: '';
-  position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
-}
-.sprint-card.s1::after { background: var(--teal2); }
-.sprint-card.s2::after { background: var(--amber2); }
-.sprint-card.s3::after { background: var(--purple2); }
-.sprint-card.s4::after { background: var(--blue2); }
-.sprint-label {
-  font-size: 11px; font-weight: 500;
-  text-transform: uppercase; letter-spacing: 0.07em;
-  margin-bottom: 4px;
-}
-.s1 .sprint-label { color: var(--teal); }
-.s2 .sprint-label { color: var(--amber); }
-.s3 .sprint-label { color: var(--purple); }
-.s4 .sprint-label { color: var(--blue); }
-.sprint-title {
-  font-size: 17px; font-weight: 600;
-  color: var(--text); margin-bottom: 8px;
-  letter-spacing: -0.01em;
-}
-.sprint-period {
-  font-size: 12px; color: var(--text3);
-  font-family: var(--font-mono);
-  margin-bottom: 14px;
-}
-.sprint-caps { display: flex; flex-direction: column; gap: 5px; margin-bottom: 16px; }
-.sprint-cap-item {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 12px; color: var(--text2); font-weight: 300;
-}
-.sprint-cap-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  flex-shrink: 0;
-}
-.sprint-saving {
-  font-family: var(--font-serif);
-  font-size: 26px; font-weight: 300;
-  padding-top: 14px; border-top: 1px solid var(--border);
-}
-.s1 .sprint-saving { color: var(--teal); }
-.s2 .sprint-saving { color: var(--amber); }
-.s3 .sprint-saving { color: var(--purple); }
-.s4 .sprint-saving { color: var(--blue); }
-.sprint-saving-label {
-  font-size: 11px; color: var(--text3);
-  font-family: var(--font);
-  margin-top: 2px; font-weight: 300;
-}
-
-/* ── JIRA SECTION ── */
-#jira { background: var(--bg); }
-.jira-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
-}
-.jira-board {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2); overflow: hidden;
-}
-.jira-board-header {
-  background: #0052CC;
-  padding: 14px 18px;
-  display: flex; align-items: center; gap: 10px;
-}
-.jira-board-title {
-  font-size: 13px; font-weight: 600; color: white;
-}
-.jira-cols {
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 1px; background: var(--border); padding: 14px; gap: 10px;
-}
-.jira-col-title {
-  font-size: 10px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.05em;
-  color: var(--text3); margin-bottom: 8px;
-}
-.jira-ticket {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 8px; padding: 10px;
-  margin-bottom: 6px; font-size: 11px;
-}
-.jira-ticket-key {
-  font-family: var(--font-mono); font-size: 10px;
-  color: var(--blue); font-weight: 500; margin-bottom: 4px;
-}
-.jira-ticket-title { color: var(--text); font-weight: 400; line-height: 1.4; }
-.jira-ticket-meta {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-top: 6px;
-}
-.jira-priority {
-  width: 12px; height: 12px; border-radius: 3px;
-}
-.jira-avatar {
-  width: 18px; height: 18px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 8px; font-weight: 600; color: white;
-}
-.pd-insights {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2); overflow: hidden;
-}
-.pd-header {
-  background: #172B4D;
-  padding: 14px 18px;
-}
-.pd-title { font-size: 13px; font-weight: 600; color: white; }
-.pd-sub { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px; }
-.pd-body { padding: 14px; }
-.pd-insight {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--bg3);
-  margin-bottom: 8px;
-  transition: all 0.15s;
-}
-.pd-insight:hover {
-  border-color: var(--border2);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-.pd-insight-title { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
-.pd-insight-meta {
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-}
-.pd-votes {
-  font-size: 10px; color: var(--text3);
-  display: flex; align-items: center; gap: 3px;
-}
-.pd-theme { font-size: 10px; font-weight: 500; color: var(--purple); }
-
-/* ── COST MODEL ── */
-#costs { background: var(--bg2); }
-.cost-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
-}
-.cost-table { width: 100%; border-collapse: collapse; }
-.cost-table th {
-  font-size: 10px; font-weight: 500;
-  text-transform: uppercase; letter-spacing: 0.06em;
-  color: var(--text3); padding: 8px 0;
-  border-bottom: 1px solid var(--border2);
-  text-align: left;
-}
-.cost-table th:last-child { text-align: right; }
-.cost-table td { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
-.cost-table tr:last-child td { border-bottom: none; }
-.cost-table td:first-child { color: var(--text2); font-weight: 300; }
-.cost-table td:last-child { text-align: right; font-weight: 600; color: var(--text); }
-.cost-table td.free { color: var(--teal); }
-.cost-table td.cost { color: var(--amber); }
-.cost-total-row td {
-  font-weight: 600 !important; border-top: 2px solid var(--border2);
-  padding-top: 14px;
-}
-.scale-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-.scale-table td { padding: 10px 12px; font-size: 13px; }
-.scale-table tr:nth-child(even) { background: var(--bg3); }
-.scale-table td:first-child { color: var(--text2); border-radius: 8px 0 0 8px; }
-.scale-table td:last-child { text-align: right; font-weight: 600; border-radius: 0 8px 8px 0; }
-
-/* ── REQUEST FORM ── */
-#request { background: #0D1117; }
-.request-inner {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
-  align-items: start;
-}
-.request-left .sec-title { color: white; }
-.request-left .sec-eyebrow { color: var(--teal3); }
-.request-left .sec-desc { color: rgba(255,255,255,0.6); }
-.form-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: var(--r2);
-  padding: 28px;
-}
-.form-group { margin-bottom: 16px; }
-.form-label {
-  display: block;
-  font-size: 12px; font-weight: 500;
-  color: rgba(255,255,255,0.6);
-  margin-bottom: 7px;
-  text-transform: uppercase; letter-spacing: 0.04em;
-}
-.form-input, .form-select, .form-textarea {
-  width: 100%;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: var(--r);
-  padding: 10px 14px;
-  font-size: 13px; color: white;
-  font-family: var(--font);
-  outline: none;
-  transition: border-color 0.15s;
-}
-.form-input::placeholder, .form-textarea::placeholder { color: rgba(255,255,255,0.3); }
-.form-input:focus, .form-select:focus, .form-textarea:focus {
-  border-color: var(--teal3);
-}
-.form-select { cursor: pointer; }
-.form-select option { background: var(--navy); color: white; }
-.form-textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.form-submit {
-  width: 100%; padding: 13px;
-  background: var(--teal2);
-  border: none; border-radius: var(--r);
-  font-size: 14px; font-weight: 500;
-  color: white; cursor: pointer;
-  font-family: var(--font);
-  transition: all 0.15s;
-  margin-top: 4px;
-}
-.form-submit:hover { background: var(--teal); transform: translateY(-1px); }
-.form-note {
-  font-size: 11px; color: rgba(255,255,255,0.35);
-  text-align: center; margin-top: 12px; line-height: 1.5;
-}
-.request-stats {
-  display: flex; flex-direction: column; gap: 16px; margin-top: 40px;
-}
-.request-stat {
-  display: flex; align-items: center; gap: 16px;
-  padding: 16px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: var(--r);
-}
-.rs-n {
-  font-family: var(--font-serif);
-  font-size: 32px; font-weight: 300;
-  color: var(--teal3); line-height: 1; min-width: 70px;
-}
-.rs-l { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.4; }
-
-/* ── CAPSTONE ── */
-#capstone { background: var(--bg); }
-.capstone-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
-}
-.capstone-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 24px;
-}
-.capstone-num {
-  font-family: var(--font-serif);
-  font-size: 48px; font-weight: 300;
-  line-height: 1; margin-bottom: 16px;
-}
-.d1 .capstone-num { color: var(--teal); }
-.d2 .capstone-num { color: var(--purple); }
-.d3 .capstone-num { color: var(--amber); }
-.capstone-title {
-  font-size: 16px; font-weight: 600;
-  color: var(--text); margin-bottom: 10px;
-  letter-spacing: -0.01em;
-}
-.capstone-desc {
-  font-size: 13px; color: var(--text2);
-  line-height: 1.65; font-weight: 300;
-  margin-bottom: 16px;
-}
-.capstone-list { list-style: none; }
-.capstone-list li {
-  font-size: 12px; color: var(--text2);
-  padding: 5px 0; border-bottom: 1px solid var(--border);
-  display: flex; align-items: flex-start; gap: 8px;
-  font-weight: 300;
-}
-.capstone-list li:last-child { border-bottom: none; }
-.capstone-list li::before {
-  content: "→"; color: var(--teal); font-size: 11px;
-  margin-top: 1px; flex-shrink: 0;
-}
-.meta-moment {
-  background: linear-gradient(135deg, var(--navy2) 0%, #0D4F45 100%);
-  border-radius: var(--r2); padding: 40px;
-  margin-top: 24px;
-  display: flex; align-items: center; gap: 40px;
-}
-.mm-text h3 {
-  font-family: var(--font-serif);
-  font-size: 28px; font-weight: 300;
-  color: white; margin-bottom: 12px; line-height: 1.2;
-}
-.mm-text h3 em { font-style: italic; color: var(--teal3); }
-.mm-text p {
-  font-size: 14px; color: rgba(255,255,255,0.6);
-  line-height: 1.65; font-weight: 300; max-width: 500px;
-}
-.mm-flow {
-  display: flex; align-items: center; gap: 12px;
-  flex-shrink: 0;
-}
-.mm-node {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 10px; padding: 10px 14px;
-  font-size: 11px; font-weight: 500;
-  color: rgba(255,255,255,0.8); text-align: center;
-  min-width: 80px;
-}
-.mm-arrow { color: var(--teal3); font-size: 16px; }
-
-/* ── FOOTER ── */
-footer {
-  background: #0A0F1E;
-  padding: 40px 2rem;
-}
-.footer-inner {
-  max-width: 1100px; margin: 0 auto;
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 16px;
-}
-.footer-left {
-  font-size: 13px; color: rgba(255,255,255,0.4); font-weight: 300;
-}
-.footer-left strong { color: rgba(255,255,255,0.8); font-weight: 500; }
-.footer-links { display: flex; gap: 16px; }
-.footer-links a {
-  font-size: 12px; color: rgba(255,255,255,0.3);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-.footer-links a:hover { color: rgba(255,255,255,0.7); }
-
-/* ── SUCCESS TOAST ── */
-.toast {
-  position: fixed; bottom: 32px; right: 32px; z-index: 999;
-  background: var(--navy2);
-  color: white; border-radius: var(--r);
-  padding: 14px 20px;
-  font-size: 13px; font-weight: 500;
-  box-shadow: var(--shadow2);
-  display: flex; align-items: center; gap: 10px;
-  transform: translateY(100px); opacity: 0;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.toast.show { transform: translateY(0); opacity: 1; }
-.toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal2); }
-
-/* ── ANIMATIONS ── */
-.fade-in {
-  opacity: 0; transform: translateY(20px);
-  transition: all 0.6s ease;
-}
-.fade-in.visible { opacity: 1; transform: translateY(0); }
-
-@media (max-width: 768px) {
-  .hero-inner, .bc-grid, .cost-grid, .jira-grid,
-  .request-inner, .capstone-grid { grid-template-columns: 1fr; }
-  .hero-title { font-size: 36px; }
-  .hero-visual { display: none; }
-  nav { gap: 1rem; }
-  .nav-links { display: none; }
-}
-
-/* ── DOCS TEAM ── */
-#docs { background: var(--bg); }
-.docs-hero {
-  background: var(--navy2);
-  border-radius: var(--r2);
-  padding: 40px 48px;
-  display: flex; align-items: center; gap: 48px;
-  margin-bottom: 32px;
-}
-.docs-hero-text h3 {
-  font-family: var(--font-serif);
-  font-size: 32px; font-weight: 300;
-  color: white; margin-bottom: 10px; line-height: 1.2;
-}
-.docs-hero-text h3 em { font-style: italic; color: var(--teal3); }
-.docs-hero-text p {
-  font-size: 14px; color: rgba(255,255,255,0.55);
-  line-height: 1.65; font-weight: 300; max-width: 480px;
-}
-.docs-stats {
-  display: flex; gap: 32px; flex-shrink: 0;
-}
-.docs-stat-n {
-  font-family: var(--font-serif);
-  font-size: 36px; font-weight: 300;
-  color: var(--teal3); line-height: 1; margin-bottom: 4px;
-}
-.docs-stat-l { font-size: 11px; color: rgba(255,255,255,0.4); }
-.docs-caps-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 14px;
-  margin-bottom: 28px;
-}
-.docs-cap {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 20px 22px;
-  border-left: 4px solid var(--teal2);
-  transition: all 0.2s;
-}
-.docs-cap:hover {
-  box-shadow: var(--shadow2);
-  transform: translateY(-2px);
-}
-.docs-cap-header {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
-}
-.docs-cap-icon {
-  width: 36px; height: 36px; border-radius: 9px;
-  background: #E1F5EE;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 17px; flex-shrink: 0;
-}
-.docs-cap-title { font-size: 14px; font-weight: 600; color: var(--text); }
-.docs-cap-tag { font-size: 10px; font-weight: 500; color: var(--teal); background: rgba(13,122,106,0.08); padding: 2px 8px; border-radius: 99px; display: inline-block; margin-top: 2px; }
-.docs-cap-desc { font-size: 12px; color: var(--text2); line-height: 1.6; font-weight: 300; margin-bottom: 12px; }
-.docs-cap-detail {
-  background: var(--bg);
-  border-radius: 8px;
-  padding: 10px 13px;
-  font-size: 11px; color: var(--text2);
-  line-height: 1.6; font-weight: 300;
-}
-.docs-cap-detail strong { color: var(--text); font-weight: 500; }
-.docs-workflow {
-  background: var(--bg3);
-  border-radius: var(--r2);
-  padding: 28px 32px;
-  margin-bottom: 24px;
-}
-.docs-workflow-title {
-  font-size: 13px; font-weight: 500; color: var(--text);
-  margin-bottom: 20px;
-  display: flex; align-items: center; gap: 8px;
-}
-.docs-flow-steps {
-  display: flex; align-items: center; gap: 0; flex-wrap: wrap;
-}
-.docs-flow-step {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 16px;
-  font-size: 12px;
-  min-width: 120px;
-}
-.docs-flow-step-num {
-  font-size: 10px; font-weight: 600; color: var(--teal);
-  font-family: var(--font-mono); margin-bottom: 3px;
-}
-.docs-flow-step-title { font-weight: 600; color: var(--text); margin-bottom: 2px; }
-.docs-flow-step-sub { color: var(--text3); font-size: 11px; font-weight: 300; }
-.docs-flow-arrow {
-  color: var(--teal2); font-size: 18px; padding: 0 10px;
-  flex-shrink: 0;
-}
-.docs-tools-row {
-  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px;
-}
-.docs-pain-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px;
-}
-.docs-pain {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 16px 18px;
-  display: flex; gap: 14px; align-items: flex-start;
-}
-.docs-pain-icon {
-  width: 32px; height: 32px; border-radius: 8px;
-  background: #FCEBEB;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; flex-shrink: 0;
-}
-.docs-pain-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-.docs-pain-desc { font-size: 12px; color: var(--text2); line-height: 1.5; font-weight: 300; }
-.docs-pain-time { font-size: 11px; color: var(--amber); font-weight: 600; margin-top: 4px; }
-
-
-/* ── LIGHT THEME ── */
 body.light {
-  --bg: #F6F4F0;
-  --bg2: #EDEBE5;
-  --bg3: #E4E1D9;
-  --white: #FFFFFF;
-  --text: #1A1A18;
-  --text2: #4A4A46;
-  --text3: #7A7A74;
-  --border: rgba(26,26,24,0.1);
-  --border2: rgba(26,26,24,0.18);
-  --shadow: 0 2px 16px rgba(15,31,61,0.08);
-  --shadow2: 0 8px 40px rgba(15,31,61,0.14);
+  --bg:#F6F4F0;--bg2:#EDEBE5;--bg3:#E4E1D9;--bg4:#D8D4CC;
+  --text:#1A1A18;--text2:#4A4A46;--text3:#7A7A74;
+  --border:rgba(26,26,24,0.1);--border2:rgba(26,26,24,0.18);
+  --shadow:0 2px 16px rgba(15,31,61,0.08);
+  --shadow2:0 8px 40px rgba(15,31,61,0.14);
 }
-body.light nav {
-  background: rgba(246,244,240,0.95);
-}
-body.light #kpis,
-body.light .kpi-item {
-  background: #1A2F5A;
-}
-body.light #request {
-  background: #1A2F5A;
-}
-body.light .hero-grid-bg {
-  background-image:
-    linear-gradient(rgba(26,47,90,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(26,47,90,0.04) 1px, transparent 1px);
-}
-body.light .hero-glow {
-  background: radial-gradient(circle, rgba(13,122,106,0.08) 0%, transparent 70%);
-}
-body.light .hc-body {
-  background: var(--bg2);
-}
-body.light .msg-bubble {
-  background: var(--bg2);
-  color: var(--text);
-}
-body.light .typing {
-  background: var(--bg2);
-}
-body.light .hero-chip {
-  background: var(--white);
-}
-body.light footer {
-  background: #0F1F3D;
-}
-body.light .bc-card.dark {
-  background: #1A2F5A;
-}
-body.light .source-org {
-  color: #1A2F5A;
-}
-body.light .cap-card,
-body.light .arch-layer,
-body.light .sprint-card,
-body.light .jira-board,
-body.light .pd-insights,
-body.light .capstone-card,
-body.light .tool-chip,
-body.light .bc-card,
-body.light .source-card,
-body.light .docs-cap,
-body.light .docs-pain {
-  background: var(--white);
-}
-body.light .jira-ticket,
-body.light .pd-insight,
-body.light .docs-flow-step,
-body.light .docs-workflow {
-  background: var(--bg2);
-}
-body.light .arch-layer-head:hover {
-  background: var(--bg);
-}
-body.light .sprint-tab:hover { background: var(--bg2); }
-body.light .nav-links a:hover,
-body.light .nav-links a.active { background: var(--bg2); }
-body.light .tool-chip:hover { background: #1A2F5A; color: white; border-color: #1A2F5A; }
-body.light .scale-table tr:nth-child(even) { background: var(--bg); }
-body.light ::-webkit-scrollbar-track { background: var(--bg2); }
-body.light .docs-cap-detail { background: var(--bg); }
-body.light .mm-node { background: rgba(255,255,255,0.15); }
+body.light nav { background:rgba(246,244,240,0.95); }
+body.light #kpis,.light .kpi-item { background:#1A2F5A; }
+body.light #request { background:#1A2F5A; }
+body.light footer { background:#0F1F3D; }
+body.light .hero-grid-bg { background-image:linear-gradient(rgba(26,47,90,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(26,47,90,0.04) 1px,transparent 1px); }
+body.light .card-white,.light .tool-card,.light .doc-card,.light .res-card,.light .cap-card,.light .sprint-card,.light .arch-layer,.light .jira-board,.light .pd-insights,.light .capstone-card,.light .tool-chip,.light .bc-card,.light .source-card,.light .docs-cap,.light .docs-pain { background:#ffffff; }
+body.light .hc-body,.light .msg-bubble,.light .typing { background:var(--bg2); }
+body.light .msg-bubble { color:var(--text); }
+body.light .hero-chip,.light .tool-chip { background:#ffffff; }
+body.light .tool-chip:hover { background:#1A2F5A;color:#fff;border-color:#1A2F5A; }
+body.light .pd-insight,.light .jira-ticket,.light .docs-flow-step,.light .docs-workflow { background:var(--bg2); }
+body.light .arch-layer-head:hover { background:var(--bg); }
+body.light .sprint-tab.active { background:#1D9E75;border-color:#1D9E75; }
+body.light .scale-table tr:nth-child(even) { background:var(--bg); }
+body.light .source-org { color:#1A2F5A; }
+body.light .bc-card.dark { background:#1A2F5A; }
+body.light .personal-col { background:#ffffff; }
+body.light .personal-item:hover { background:var(--bg2); }
+body.light .platform-section { background:var(--bg2); }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background-color 0.25s,color 0.2s}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--navy)}
+::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:3px}
 
-/* smooth theme transition */
-body, body * {
-  transition: background-color 0.25s ease, border-color 0.2s ease, color 0.2s ease;
-}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(20,25,32,0.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:58px;display:flex;align-items:center;padding:0 1.5rem;gap:1rem}
+.nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.nav-mark{width:30px;height:30px;background:var(--teal2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff}
+.nav-name{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.02em}
+.nav-links{display:flex;gap:2px;margin-left:auto;list-style:none}
+.nav-links a{text-decoration:none;font-size:12px;color:var(--text2);padding:5px 10px;border-radius:7px;transition:all 0.15s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{background:var(--bg3);color:var(--text);font-weight:500}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:8px;flex-shrink:0}
+.theme-btn{background:transparent;border:0.5px solid var(--border2);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:5px;transition:all 0.15s;font-family:var(--font)}
+.theme-btn:hover{background:var(--bg3);color:var(--text)}
+.nav-cta{padding:7px 14px;background:var(--teal2);color:#fff;border-radius:8px;font-size:12px;font-weight:500;text-decoration:none;transition:all 0.15s;white-space:nowrap}
+.nav-cta:hover{background:var(--teal)}
 
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;padding-top:58px;background:var(--bg);position:relative;overflow:hidden}
+.hero-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.hero-glow{position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(13,122,106,0.1) 0%,transparent 70%);top:10%;right:-150px;pointer-events:none}
+.hero-glow2{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(82,64,181,0.07) 0%,transparent 70%);bottom:10%;left:-100px;pointer-events:none}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;max-width:1100px;margin:0 auto;width:100%;padding:0 2rem}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:500;color:var(--teal);background:rgba(13,122,106,0.08);border:1px solid rgba(13,122,106,0.2);padding:4px 12px;border-radius:99px;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:18px}
+.hero-title{font-family:var(--serif);font-size:52px;font-weight:300;line-height:1.06;color:var(--text);letter-spacing:-0.02em;margin-bottom:18px}
+.hero-title em{font-style:italic;color:var(--teal)}
+.hero-desc{font-size:15px;color:var(--text2);line-height:1.7;margin-bottom:28px;font-weight:300;max-width:440px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px}
+.btn-primary{padding:11px 22px;background:var(--teal2);color:#fff;border-radius:var(--r);font-size:13px;font-weight:500;text-decoration:none;transition:all 0.15s;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.btn-primary:hover{background:var(--teal);transform:translateY(-1px)}
+.btn-secondary{padding:11px 22px;background:rgba(255,255,255,0.06);color:var(--text);border-radius:var(--r);font-size:13px;font-weight:500;text-decoration:none;transition:all 0.15s;border:1px solid var(--border2);cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.btn-secondary:hover{background:rgba(255,255,255,0.1)}
+.hero-stats{display:flex;gap:28px}
+.hs-n{font-family:var(--serif);font-size:34px;font-weight:300;color:var(--teal);line-height:1;margin-bottom:4px}
+.hs-l{font-size:11px;color:var(--text3)}
+.hero-visual{position:relative}
+.hero-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:var(--shadow2)}
+.hc-bar{background:var(--navy2);padding:12px 16px;display:flex;align-items:center;gap:8px}
+.hc-dot{width:9px;height:9px;border-radius:50%}
+.hc-t{font-size:11px;color:rgba(255,255,255,0.5);margin-left:3px}
+.hc-body{padding:14px;background:var(--bg2)}
+.msg-r{display:flex;gap:9px;margin-bottom:10px;animation:fadeUp 0.5s ease both}
+.avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
+.bubble{background:var(--bg3);border-radius:3px 12px 12px 12px;padding:8px 12px;font-size:11px;color:var(--text);line-height:1.55;max-width:270px}
+.bubble.bot{background:rgba(13,122,106,0.08);border-radius:12px 3px 12px 12px;border:1px solid rgba(13,122,106,0.12)}
+.bubble strong{font-weight:600}
+.bubble .tag{display:inline-block;background:rgba(13,122,106,0.12);color:var(--teal3);font-size:9px;font-weight:500;padding:2px 6px;border-radius:99px;margin-top:4px;margin-right:3px}
+.typing{display:flex;gap:3px;align-items:center;padding:8px 12px;background:var(--bg3);border-radius:3px 12px 12px 12px;width:fit-content}
+.typing span{width:5px;height:5px;background:var(--text3);border-radius:50%;animation:bounce 1.2s infinite}
+.typing span:nth-child(2){animation-delay:0.2s}
+.typing span:nth-child(3){animation-delay:0.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.hero-chip{position:absolute;background:var(--bg2);border:1px solid var(--border);border-radius:99px;padding:6px 12px;font-size:11px;font-weight:500;color:var(--text2);box-shadow:var(--shadow);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.chip-dot{width:6px;height:6px;border-radius:50%;background:var(--teal2)}
+
+/* KPI STRIP */
+#kpis{padding:36px 2rem;background:#0D1117}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;max-width:1100px;margin:0 auto;background:rgba(255,255,255,0.05);border-radius:var(--r2);overflow:hidden}
+.kpi-item{background:#0D1117;padding:24px 20px;text-align:center;transition:background 0.15s}
+.kpi-item:hover{background:rgba(255,255,255,0.04)}
+.kpi-n{font-family:var(--serif);font-size:36px;font-weight:300;color:var(--teal3);line-height:1;margin-bottom:6px}
+.kpi-l{font-size:11px;color:rgba(255,255,255,0.4)}
+
+/* SHARED */
+section{padding:72px 2rem}
+.container{max-width:1100px;margin:0 auto}
+.sec-eye{font-size:10px;font-weight:500;color:var(--teal);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:10px}
+.sec-title{font-family:var(--serif);font-size:38px;font-weight:300;color:var(--text);line-height:1.12;letter-spacing:-0.02em;margin-bottom:12px}
+.sec-title em{font-style:italic;color:var(--teal)}
+.sec-desc{font-size:15px;color:var(--text2);line-height:1.7;font-weight:300;max-width:540px}
+.sec-head{margin-bottom:40px}
+.badge{font-size:10px;font-weight:500;padding:2px 8px;border-radius:99px}
+.bt{background:rgba(13,122,106,0.12);color:var(--teal3)}
+.ba{background:rgba(196,125,14,0.12);color:var(--amber2)}
+.bp{background:rgba(82,64,181,0.12);color:var(--purple2)}
+.bb{background:rgba(24,95,165,0.12);color:var(--blue2)}
+.bk{background:var(--bg3);color:var(--text3)}
+.bpk{background:rgba(212,83,126,0.12);color:var(--pink2)}
+.fade-in{opacity:0;transform:translateY(16px);transition:all 0.55s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* ══════════════════════════════════════════
+   PLATFORM SECTION — three-column layout
+══════════════════════════════════════════ */
+#platform{background:var(--bg)}
+.platform-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:start}
+
+/* Column headers */
+.col-header{border-radius:var(--r2) var(--r2) 0 0;padding:20px 22px;margin-bottom:2px}
+.col-title{font-size:16px;font-weight:600;color:#fff;margin-bottom:4px;letter-spacing:-0.01em}
+.col-sub{font-size:11px;color:rgba(255,255,255,0.5);font-weight:300}
+.col-count{font-family:var(--mono);font-size:11px;color:rgba(255,255,255,0.4);margin-top:8px}
+
+/* Tool cards — live links */
+.tool-card{background:var(--bg2);border:1px solid var(--border);border-radius:0;padding:0;transition:all 0.15s;text-decoration:none;display:block;border-bottom:none}
+.tool-card:first-of-type{border-radius:0}
+.tool-card:last-of-type{border-radius:0 0 var(--r2) var(--r2);border-bottom:1px solid var(--border)}
+.tool-card:hover{background:var(--bg3);border-color:var(--border2)}
+.tool-card-inner{display:flex;align-items:center;gap:12px;padding:13px 16px}
+.tool-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.tool-info{flex:1;min-width:0}
+.tool-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.tool-desc{font-size:11px;color:var(--text3);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tool-arrow{font-size:14px;color:var(--text3);flex-shrink:0;transition:transform 0.15s}
+.tool-card:hover .tool-arrow{transform:translateX(2px);color:var(--teal3)}
+.tool-status{font-size:9px;font-weight:500;padding:2px 6px;border-radius:99px;white-space:nowrap;flex-shrink:0}
+.st-live{background:rgba(13,122,106,0.15);color:var(--teal3)}
+.st-soon{background:rgba(255,255,255,0.06);color:var(--text3)}
+.st-new{background:rgba(82,64,181,0.15);color:var(--purple2)}
+
+/* Personal AI column — highlighted */
+.personal-col-wrap{background:var(--bg2);border:1px solid var(--teal2);border-radius:var(--r2);overflow:hidden;position:relative}
+.personal-col-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal2),var(--purple2))}
+.personal-header{padding:20px 22px;background:linear-gradient(135deg,rgba(13,122,106,0.15) 0%,rgba(82,64,181,0.1) 100%)}
+.personal-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px;letter-spacing:-0.01em;display:flex;align-items:center;gap:8px}
+.personal-sub{font-size:11px;color:var(--text2);font-weight:300}
+.personal-new-badge{font-size:9px;font-weight:600;background:var(--teal2);color:#fff;padding:2px 7px;border-radius:99px;text-transform:uppercase;letter-spacing:0.05em}
+.personal-items{padding:8px 0}
+.personal-item{display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none;transition:all 0.15s;border-bottom:1px solid var(--border);cursor:pointer}
+.personal-item:last-child{border-bottom:none}
+.personal-item:hover{background:var(--bg3)}
+.pi-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.pi-info{flex:1;min-width:0}
+.pi-name{font-size:12px;font-weight:500;color:var(--text);margin-bottom:1px}
+.pi-saving{font-size:10px;color:var(--teal);font-weight:500}
+.pi-arrow{font-size:12px;color:var(--text3);flex-shrink:0;transition:transform 0.15s}
+.personal-item:hover .pi-arrow{transform:translateX(2px);color:var(--teal3)}
+.personal-footer{padding:12px 16px;border-top:1px solid var(--border);background:rgba(13,122,106,0.04)}
+.personal-footer-text{font-size:11px;color:var(--text3);line-height:1.5}
+.personal-footer-text strong{color:var(--teal);font-weight:500}
+
+/* Doc + resource cards */
+.doc-card,.res-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;text-decoration:none;display:block;transition:all 0.15s;margin-bottom:10px}
+.doc-card:hover,.res-card:hover{background:var(--bg3);border-color:var(--border2);transform:translateY(-1px);box-shadow:var(--shadow)}
+.doc-card:last-child,.res-card:last-child{margin-bottom:0}
+.dc-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.dc-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.dc-title{font-size:13px;font-weight:500;color:var(--text)}
+.dc-desc{font-size:11px;color:var(--text3);line-height:1.5}
+.dc-meta{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.dc-size{font-size:10px;color:var(--text3);font-family:var(--mono)}
+
+/* ══ CAPABILITIES ══ */
+#capabilities{background:var(--bg2)}
+.sprint-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:28px}
+.sprint-tab{padding:6px 14px;border-radius:99px;font-size:11px;font-weight:500;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all 0.15s}
+.sprint-tab:hover{background:var(--bg3)}
+.sprint-tab.active{background:var(--teal2);color:#fff;border-color:var(--teal2)}
+.cap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.cap-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);padding:18px;transition:all 0.2s;cursor:pointer;position:relative;overflow:hidden}
+.cap-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:0;transition:opacity 0.2s}
+.cap-card:hover{box-shadow:var(--shadow2);transform:translateY(-2px);border-color:var(--border2)}
+.cap-card:hover::before{opacity:1}
+.cap-card[data-c="teal"]::before{background:var(--teal2)}
+.cap-card[data-c="amber"]::before{background:var(--amber2)}
+.cap-card[data-c="purple"]::before{background:var(--purple2)}
+.cap-card[data-c="blue"]::before{background:var(--blue2)}
+.cap-card[data-c="green"]::before{background:#639922}
+.cap-card[data-c="red"]::before{background:#E24B4A}
+.cap-card[data-c="pink"]::before{background:var(--pink)}
+.cap-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.cap-ico{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.cap-num{font-size:10px;font-weight:500;color:var(--text3);font-family:var(--mono);margin-bottom:4px}
+.cap-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:5px;letter-spacing:-0.01em}
+.cap-desc{font-size:12px;color:var(--text2);line-height:1.55;font-weight:300;margin-bottom:10px}
+.cap-row{display:flex;gap:10px;margin-bottom:7px}
+.cap-rl{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;min-width:46px;padding-top:1px;flex-shrink:0}
+.cap-rv{font-size:11px;color:var(--text2);line-height:1.45}
+.cap-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.cap-save{font-size:12px;font-weight:600;color:var(--teal)}
+
+/* ══ SPRINT PLAN ══ */
+#sprints{background:var(--bg)}
+.sprint-timeline{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.sprint-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:22px;position:relative;overflow:hidden}
+.sprint-card::after{content:'';position:absolute;top:0;left:0;bottom:0;width:4px}
+.sprint-card.s1::after{background:var(--teal2)}
+.sprint-card.s2::after{background:var(--amber2)}
+.sprint-card.s3::after{background:var(--purple2)}
+.sprint-card.s4::after{background:var(--blue2)}
+.sl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px}
+.s1 .sl{color:var(--teal)}.s2 .sl{color:var(--amber)}.s3 .sl{color:var(--purple)}.s4 .sl{color:var(--blue)}
+.st2{font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px;letter-spacing:-0.01em}
+.sp{font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:12px}
+.sc-list{display:flex;flex-direction:column;gap:4px;margin-bottom:14px}
+.sc-item{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text2);font-weight:300}
+.sc-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}
+.ss{font-family:var(--serif);font-size:24px;font-weight:300;padding-top:12px;border-top:1px solid var(--border)}
+.s1 .ss{color:var(--teal)}.s2 .ss{color:var(--amber)}.s3 .ss{color:var(--purple)}.s4 .ss{color:var(--blue)}
+.ssl{font-size:10px;color:var(--text3);margin-top:2px;font-weight:300}
+
+/* ══ BUSINESS CASE ══ */
+#business{background:var(--bg2)}
+.bc-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+.bc-card{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:24px}
+.bc-card.dark{background:var(--navy2);border-color:transparent}
+.bc-label{font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:16px}
+.bc-card.dark .bc-label{color:rgba(255,255,255,0.4)}
+.roi-n{font-family:var(--serif);font-size:68px;font-weight:300;color:var(--teal3);line-height:1;margin-bottom:8px}
+.roi-l{font-size:13px;color:rgba(255,255,255,0.55);font-weight:300}
+.stat-t{width:100%;border-collapse:collapse}
+.stat-t tr{border-bottom:1px solid var(--border)}
+.stat-t tr:last-child{border-bottom:none}
+.stat-t td{padding:8px 0;font-size:12px}
+.stat-t td:first-child{color:var(--text2);font-weight:300}
+.stat-t td:last-child{text-align:right;font-weight:600;color:var(--text)}
+.stat-t td.green{color:var(--teal)}
+.stat-t td.amber{color:var(--amber)}
+.src-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:20px}
+.src-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.src-org{font-size:10px;font-weight:600;color:var(--teal3);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.05em}
+.src-stat{font-family:var(--serif);font-size:22px;font-weight:300;color:var(--teal);margin-bottom:3px}
+.src-desc{font-size:10px;color:var(--text3);line-height:1.4;font-weight:300}
+
+/* ══ REQUEST ══ */
+#request{background:#0D1117}
+.req-inner{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.req-left .sec-title{color:#fff}
+.req-left .sec-eye{color:var(--teal3)}
+.req-left .sec-desc{color:rgba(255,255,255,0.55)}
+.form-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r2);padding:24px}
+.fl{display:block;font-size:11px;font-weight:500;color:rgba(255,255,255,0.5);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em}
+.fi,.fs,.fta{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--r);padding:9px 13px;font-size:12px;color:#fff;font-family:var(--font);outline:none;transition:border-color 0.15s;margin-bottom:13px}
+.fi::placeholder,.fta::placeholder{color:rgba(255,255,255,0.25)}
+.fi:focus,.fs:focus,.fta:focus{border-color:var(--teal3)}
+.fs{cursor:pointer}.fs option{background:var(--navy)}
+.fta{resize:vertical;min-height:72px;line-height:1.5}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fsub{width:100%;padding:12px;background:var(--teal2);border:none;border-radius:var(--r);font-size:13px;font-weight:500;color:#fff;cursor:pointer;font-family:var(--font);transition:all 0.15s;margin-top:4px}
+.fsub:hover{background:var(--teal);transform:translateY(-1px)}
+.fnote{font-size:10px;color:rgba(255,255,255,0.3);text-align:center;margin-top:10px;line-height:1.5}
+.req-stats{display:flex;flex-direction:column;gap:12px;margin-top:32px}
+.req-stat{display:flex;align-items:center;gap:14px;padding:14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:var(--r)}
+.rsn{font-family:var(--serif);font-size:28px;font-weight:300;color:var(--teal3);min-width:60px;line-height:1}
+.rsl{font-size:11px;color:rgba(255,255,255,0.45);line-height:1.4}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;z-index:999;background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:var(--r);padding:12px 18px;font-size:12px;font-weight:500;box-shadow:var(--shadow2);display:flex;align-items:center;gap:9px;transform:translateY(80px);opacity:0;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+.toast.show{transform:translateY(0);opacity:1}
+.tdot{width:7px;height:7px;border-radius:50%;background:var(--teal2)}
+
+/* FOOTER */
+footer{background:#0A0F1E;padding:36px 2rem}
+.foot-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.foot-l{font-size:12px;color:rgba(255,255,255,0.35);font-weight:300}
+.foot-l strong{color:rgba(255,255,255,0.7);font-weight:500}
+.foot-links{display:flex;gap:14px}
+.foot-links a{font-size:11px;color:rgba(255,255,255,0.25);text-decoration:none;transition:color 0.15s}
+.foot-links a:hover{color:rgba(255,255,255,0.65)}
+
+@media(max-width:900px){
+  .platform-grid{grid-template-columns:1fr}
+  .hero-inner,.bc-grid,.req-inner{grid-template-columns:1fr}
+  .hero-title{font-size:36px}
+  .hero-visual{display:none}
+  .nav-links{display:none}
+}
 </style>
 </head>
 <body>
 
-<!-- ═══ NAV ═══ -->
 <nav>
   <a href="#hero" class="nav-logo">
-    <div class="nav-logo-mark">M</div>
-    <span class="nav-logo-text">Mona</span>
+    <div class="nav-mark">M</div>
+    <span class="nav-name">Mona</span>
   </a>
   <ul class="nav-links">
-    <li><a href="#capabilities" class="active">Capabilities</a></li>
+    <li><a href="#platform">Platform</a></li>
+    <li><a href="#capabilities">Capabilities</a></li>
+    <li><a href="#sprints">Roadmap</a></li>
     <li><a href="#business">Business case</a></li>
-    <li><a href="#architecture">Architecture</a></li>
-    <li><a href="#sprints">Sprint plan</a></li>
-    <li><a href="#jira">Jira + Discovery</a></li>
-    <li><a href="#costs">Costs</a></li>
-    <li><a href="#capstone">Capstone</a></li>
-    <li><a href="#docs">Docs team</a></li>
     <li><a href="#request">Request</a></li>
   </ul>
-
-  <button id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode" style="
-    background:transparent;border:0.5px solid var(--border2);border-radius:8px;
-    padding:5px 10px;cursor:pointer;font-size:13px;color:var(--text2);
-    display:flex;align-items:center;gap:6px;transition:all 0.15s;margin-left:8px;
-  " onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'">
-    <span id="theme-icon">☀️</span>
-    <span id="theme-label" style="font-size:12px;font-weight:500">Light</span>
-  </button>
-  <a href="#request" class="nav-cta">Request a capability →</a>
+  <div class="nav-right">
+    <button class="theme-btn" onclick="toggleTheme()" id="tbtn">☀️ <span id="tlabel">Light</span></button>
+    <a href="#request" class="nav-cta">Request a capability →</a>
+  </div>
 </nav>
 
-<!-- ═══ HERO ═══ -->
+<!-- HERO -->
 <section id="hero">
   <div class="hero-grid-bg"></div>
   <div class="hero-glow"></div>
-  <div class="hero-inner container">
-    <div class="hero-left">
-      <div class="hero-eyebrow">
-        <span>●</span> Internship capstone project — product enablement
-      </div>
-      <h1 class="hero-title">
-        Your team's<br>
-        <em>AI operating</em><br>
-        layer
-      </h1>
-      <p class="hero-desc">
-        23 capabilities. 14 Microsoft tools. Built entirely inside your M365 E5 tenant.
-        One agent — always on, working proactively, saving your team hours every single day.
-      </p>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow"><span>●</span> Internship capstone · product enablement 2026</div>
+      <h1 class="hero-title">Your team's<br><em>AI operating</em><br>layer</h1>
+      <p class="hero-desc">23 capabilities. 14 Microsoft tools. One agent — always on, proactive, saving hours every day. Built entirely inside your M365 E5 tenant.</p>
       <div class="hero-actions">
-        <a href="#capabilities" class="btn-primary">Explore capabilities →</a>
-        <a href="#business" class="btn-secondary">See the business case</a>
+        <a href="#platform" class="btn-primary">Open the platform →</a>
+        <a href="#business" class="btn-secondary">See the ROI</a>
       </div>
       <div class="hero-stats">
-        <div>
-          <div class="hero-stat-n">$89K</div>
-          <div class="hero-stat-l">CAD saved / year<br>Sprint 1 alone</div>
-        </div>
-        <div>
-          <div class="hero-stat-n">164×</div>
-          <div class="hero-stat-l">Return on<br>investment</div>
-        </div>
-        <div>
-          <div class="hero-stat-n">38h</div>
-          <div class="hero-stat-l">Recovered per<br>week (Sprint 1)</div>
-        </div>
+        <div><div class="hs-n">$89K</div><div class="hs-l">CAD saved/year<br>Sprint 1 alone</div></div>
+        <div><div class="hs-n">164×</div><div class="hs-l">Return on<br>investment</div></div>
+        <div><div class="hs-n">23</div><div class="hs-l">capabilities<br>built</div></div>
       </div>
     </div>
     <div class="hero-visual">
       <div class="hero-card">
-        <div class="hc-header">
+        <div class="hc-bar">
           <div class="hc-dot" style="background:#FF5F57"></div>
           <div class="hc-dot" style="background:#FFBD2E"></div>
           <div class="hc-dot" style="background:#28C840"></div>
-          <span class="hc-title">Mona — Teams chat</span>
+          <span class="hc-t">Mona — Teams</span>
         </div>
         <div class="hc-body">
-          <div class="msg-row" style="animation-delay:0.1s">
-            <div class="msg-avatar" style="background:#E6F1FB;color:#0C447C">AC</div>
-            <div class="msg-bubble">What are our open blockers in Sprint 24 and who owns them?</div>
+          <div class="msg-r" style="animation-delay:0.1s">
+            <div class="avatar" style="background:#E6F1FB;color:#0C447C">AC</div>
+            <div class="bubble">What are the open blockers in Sprint 24?</div>
           </div>
-          <div class="msg-row" style="animation-delay:0.4s;flex-direction:row-reverse">
-            <div class="msg-avatar" style="background:#E1F5EE;color:#085041">AI</div>
-            <div class="msg-bubble bot">
-              <strong>Sprint 24 — 2 blockers found</strong><br><br>
-              🔴 PROD-356 — SSO AC not reviewed · Owner: Marcus · 2 days blocked<br>
-              🟡 PROD-348 — API dependency · Owner: Sarah · 1 day<br><br>
-              Sprint is at 62% with 4 days remaining. Velocity on track if PROD-356 resolves today.
-              <div>
-                <span class="tag">Jira Cloud</span>
-                <span class="tag">Live data</span>
-              </div>
-            </div>
+          <div class="msg-r" style="animation-delay:0.4s;flex-direction:row-reverse">
+            <div class="avatar" style="background:#E1F5EE;color:#085041">M</div>
+            <div class="bubble bot"><strong>2 blockers found</strong><br><br>🔴 PROD-356 · SSO AC not reviewed · Marcus · 2 days<br>🟡 PROD-348 · API dependency · Sarah · 1 day<br><br>Sprint 62% complete, 4 days remaining.<div><span class="tag">Jira live</span><span class="tag">Auto-detected</span></div></div>
           </div>
-          <div class="msg-row" style="animation-delay:0.7s">
-            <div class="msg-avatar" style="background:#E6F1FB;color:#0C447C">AC</div>
-            <div class="msg-bubble">Good morning 👋 — what's my priority list for today?</div>
+          <div class="msg-r" style="animation-delay:0.8s">
+            <div class="avatar" style="background:#E6F1FB;color:#0C447C">AC</div>
+            <div class="bubble">What's my priority list for today?</div>
           </div>
-          <div class="msg-row" style="animation-delay:1s;flex-direction:row-reverse">
-            <div class="msg-avatar" style="background:#E1F5EE;color:#085041">AI</div>
-            <div class="typing">
-              <span></span><span></span><span></span>
-            </div>
+          <div class="msg-r" style="animation-delay:1.1s;flex-direction:row-reverse">
+            <div class="avatar" style="background:#E1F5EE;color:#085041">M</div>
+            <div class="typing"><span></span><span></span><span></span></div>
           </div>
         </div>
       </div>
-      <div class="hero-chip" style="bottom:-18px;left:-20px;animation:fadeUp 0.6s 1.2s both">
-        <div class="chip-dot"></div> 8am brief delivered to 3 people
-      </div>
-      <div class="hero-chip" style="top:30px;right:-20px;animation:fadeUp 0.6s 1.4s both">
-        <div class="chip-dot" style="background:#EF9F27"></div> 12 Jira tickets auto-created
-      </div>
+      <div class="hero-chip" style="bottom:-16px;left:-18px;animation:fadeUp 0.5s 1.3s both"><div class="chip-dot"></div>8am brief delivered · 3 people</div>
+      <div class="hero-chip" style="top:24px;right:-18px;animation:fadeUp 0.5s 1.5s both"><div class="chip-dot" style="background:#EF9F27"></div>12 Jira tickets auto-created</div>
     </div>
   </div>
 </section>
 
-<!-- ═══ KPI STRIP ═══ -->
+<!-- KPI STRIP -->
 <div id="kpis">
   <div class="kpi-grid">
-    <div class="kpi-item">
-      <div class="kpi-n">23</div>
-      <div class="kpi-l">total capabilities</div>
-    </div>
-    <div class="kpi-item">
-      <div class="kpi-n">4</div>
-      <div class="kpi-l">build sprints</div>
-    </div>
-    <div class="kpi-item">
-      <div class="kpi-n">14</div>
-      <div class="kpi-l">Microsoft tools</div>
-    </div>
-    <div class="kpi-item">
-      <div class="kpi-n">$9</div>
-      <div class="kpi-l">CAD / user / month at 50 people</div>
-    </div>
-    <div class="kpi-item">
-      <div class="kpi-n">$0</div>
-      <div class="kpi-l">new vendor licences</div>
-    </div>
-    <div class="kpi-item">
-      <div class="kpi-n">&lt;2h</div>
-      <div class="kpi-l">payback period</div>
-    </div>
+    <div class="kpi-item"><div class="kpi-n">23</div><div class="kpi-l">capabilities</div></div>
+    <div class="kpi-item"><div class="kpi-n">4</div><div class="kpi-l">sprints</div></div>
+    <div class="kpi-item"><div class="kpi-n">14</div><div class="kpi-l">MS tools</div></div>
+    <div class="kpi-item"><div class="kpi-n">$9</div><div class="kpi-l">CAD/user/month at 50 people</div></div>
+    <div class="kpi-item"><div class="kpi-n">$0</div><div class="kpi-l">new vendor licences</div></div>
+    <div class="kpi-item"><div class="kpi-n">&lt;2h</div><div class="kpi-l">payback period</div></div>
   </div>
 </div>
 
-<!-- ═══ CAPABILITIES ═══ -->
+<!-- ══════════════════════════════════════════
+     PLATFORM — three columns
+══════════════════════════════════════════ -->
+<section id="platform">
+  <div class="container">
+    <div class="sec-head fade-in">
+      <div class="sec-eye">The platform</div>
+      <h2 class="sec-title">All tools. All docs.<br><em>One place.</em></h2>
+      <p class="sec-desc">Launch any capability, access every document, and request new automations — all from here. Mona is the platform. This portal is the front door.</p>
+    </div>
+
+    <div class="platform-grid fade-in">
+
+      <!-- COL 1 — AI TOOLS -->
+      <div>
+        <div class="col-header" style="background:linear-gradient(135deg,#0D4F45,#1A2F5A)">
+          <div class="col-title">🤖 AI capabilities</div>
+          <div class="col-sub">Live automations — click to launch in Teams</div>
+          <div class="col-count">10 live · 13 coming</div>
+        </div>
+        <a href="https://teams.microsoft.com" target="_blank" class="tool-card">
+          <div class="tool-card-inner">
+            <div class="tool-icon" style="background:#E1F5EE">🤖</div>
+            <div class="tool-info"><div class="tool-name">Teams AI agent</div><div class="tool-desc">Ask anything · search docs · draft messages</div></div>
+            <span class="tool-status st-live">Live</span>
+            <span class="tool-arrow">→</span>
+          </div>
+        </a>
+        <a href="https://teams.microsoft.com" target="_blank" class="tool-card">
+          <div class="tool-card-inner">
+            <div class="tool-icon" style="background:#FAEEDA">☀️</div>
+            <div class="tool-info"><div class="tool-name">Morning brief</div><div class="tool-desc">8am · emails · Jira · priorities</div></div>
+            <span class="tool-status st-live">Live</span>
+            <span class="tool-arrow">→</span>
+          </div>
+        </a>
+        <a href="https://teams.microsoft.com" target="_blank" class="tool-card">
+          <div class="tool-card-inner">
+            <div class="tool-icon" style="background:#EEEDFE">💬</div>
+            <div class="tool-info"><div class="tool-name">Channel summariser</div><div class="tool-desc">Catch up on any channel instantly</div></div>
+            <span class="tool-status st-live">Live</span>
+            <span class="tool-arrow">→</span>
+          </div>
+        </a>
+        <a href="https://teams.microsoft.com" target="_blank" class="tool-card">
+          <div class="tool-card-inner">
+            <div class="tool-icon" style="background:#E6F1FB">📊</div>
+            <div class="tool-info"><div class="tool-name">Sprint health card</div><div class="tool-desc">9am · Jira sprint status to channel</div></div>
+            <span class="tool-status st-live">Live</span>
+            <span class="tool-arrow">→</span>
+          </div>
+        </a>
+        <a href="https://teams.microsoft.com" target="_blank" class="tool-card">
+          <div class="tool-card-inner">
+            <div class="tool-icon" style="background:#EAF3DE">📝</div>
+            <div class="tool-info"><div class="tool-name">Meeting capture</div><div class="tool-desc">@Mona action: during meetings</div></div>
+            <span class="tool-status st-live">Live</span>
+            <span class="tool-arrow">→</span>
+          </div>
+        </a>
+        <div class="tool-card" style="opacity:0.55;pointer-events:none">
+          <div class="tool-card-inner">
+            <div class="tool-icon" style="background:#FCEBEB">📋</div>
+            <div class="tool-info"><div class="tool-name">Release notes autopilot</div><div class="tool-desc">Jira webhook → Word + Confluence</div></div>
+            <span class="tool-status st-soon">Week 3</span>
+          </div>
+        </div>
+        <div class="tool-card" style="opacity:0.55;pointer-events:none">
+          <div class="tool-card-inner">
+            <div class="tool-icon" style="background:#FAEEDA">💬</div>
+            <div class="tool-info"><div class="tool-name">Customer feedback synthesiser</div><div class="tool-desc">Jira PD → weekly theme digest</div></div>
+            <span class="tool-status st-soon">Week 3</span>
+          </div>
+        </div>
+        <div class="tool-card" style="opacity:0.55;pointer-events:none;border-radius:0 0 var(--r2) var(--r2);border-bottom:1px solid var(--border)">
+          <div class="tool-card-inner">
+            <div class="tool-icon" style="background:#EEEDFE">📣</div>
+            <div class="tool-info"><div class="tool-name">Multi-audience comms</div><div class="tool-desc">1 brief → 4 audience versions</div></div>
+            <span class="tool-status st-soon">Week 4</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- COL 2 — PERSONAL AI (highlighted) -->
+      <div>
+        <div class="personal-col-wrap">
+          <div class="personal-header">
+            <div class="personal-title">✨ Personal AI <span class="personal-new-badge">New</span></div>
+            <div class="personal-sub">Your individual automation layer — tools built just for you</div>
+          </div>
+          <div class="personal-items">
+            <div class="personal-item" onclick="showPersonalDetail('brief')">
+              <div class="pi-icon" style="background:rgba(239,159,39,0.15)">☀️</div>
+              <div class="pi-info"><div class="pi-name">My morning brief</div><div class="pi-saving">Saves 25 min every morning</div></div>
+              <span class="tool-status st-live" style="margin-right:4px">Live</span>
+              <span class="pi-arrow">→</span>
+            </div>
+            <div class="personal-item" onclick="showPersonalDetail('inbox')">
+              <div class="pi-icon" style="background:rgba(13,122,106,0.15)">📥</div>
+              <div class="pi-info"><div class="pi-name">Priority inbox</div><div class="pi-saving">Saves 45 min/day of email triage</div></div>
+              <span class="tool-status st-soon" style="margin-right:4px">Sprint 3</span>
+              <span class="pi-arrow">→</span>
+            </div>
+            <div class="personal-item" onclick="showPersonalDetail('calendar')">
+              <div class="pi-icon" style="background:rgba(55,138,221,0.15)">📅</div>
+              <div class="pi-info"><div class="pi-name">Calendar prep brief</div><div class="pi-saving">3 prep bullets per meeting</div></div>
+              <span class="tool-status st-live" style="margin-right:4px">Live</span>
+              <span class="pi-arrow">→</span>
+            </div>
+            <div class="personal-item" onclick="showPersonalDetail('nudge')">
+              <div class="pi-icon" style="background:rgba(127,119,221,0.15)">🔔</div>
+              <div class="pi-info"><div class="pi-name">Smart nudge engine</div><div class="pi-saving">12 event types · right time</div></div>
+              <span class="tool-status st-soon" style="margin-right:4px">Sprint 3</span>
+              <span class="pi-arrow">→</span>
+            </div>
+            <div class="personal-item" onclick="showPersonalDetail('eod')">
+              <div class="pi-icon" style="background:rgba(13,122,106,0.15)">🌙</div>
+              <div class="pi-info"><div class="pi-name">End-of-day wrap-up</div><div class="pi-saving">Saves 15 min of EOD planning</div></div>
+              <span class="tool-status st-live" style="margin-right:4px">Live</span>
+              <span class="pi-arrow">→</span>
+            </div>
+            <div class="personal-item" onclick="showPersonalDetail('draft')">
+              <div class="pi-icon" style="background:rgba(212,83,126,0.15)">✍️</div>
+              <div class="pi-info"><div class="pi-name">AI drafting assistant</div><div class="pi-saving">Emails · messages · Jira ACs</div></div>
+              <span class="tool-status st-live" style="margin-right:4px">Live</span>
+              <span class="pi-arrow">→</span>
+            </div>
+            <div class="personal-item" onclick="showPersonalDetail('quiz')">
+              <div class="pi-icon" style="background:rgba(99,153,34,0.15)">🧠</div>
+              <div class="pi-info"><div class="pi-name">Knowledge quiz</div><div class="pi-saving">Test any doc or Jira epic</div></div>
+              <span class="tool-status st-soon" style="margin-right:4px">Sprint 3</span>
+              <span class="pi-arrow">→</span>
+            </div>
+          </div>
+          <div class="personal-footer">
+            <div class="personal-footer-text"><strong>How to use:</strong> Open Microsoft Teams → search for <strong>Mona</strong> in chat → start a conversation. All personal tools are accessed through the Mona agent.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COL 3 — DOCS + RESOURCES -->
+      <div>
+        <div class="col-header" style="background:linear-gradient(135deg,#3E2D8A,#1A2F5A)">
+          <div class="col-title">📚 Docs & resources</div>
+          <div class="col-sub">Everything you need to understand and use Mona</div>
+          <div class="col-count">9 documents · always up to date</div>
+        </div>
+
+        <a href="https://akshayanrajendran-tech.github.io/mona" target="_blank" class="doc-card" style="border-radius:0;border-bottom:none;border-top:none">
+          <div class="dc-top">
+            <div class="dc-icon" style="background:#E1F5EE">📋</div>
+            <div class="dc-title">Master project document</div>
+          </div>
+          <div class="dc-desc">Full 9-section document — business case, architecture, 23 capabilities, risk register, sprint plan</div>
+          <div class="dc-meta"><span class="badge bt">Word doc</span><span class="dc-size">~35KB</span></div>
+        </a>
+        <a href="https://akshayanrajendran-tech.github.io/mona" target="_blank" class="doc-card" style="border-radius:0;border-bottom:none;border-top:none">
+          <div class="dc-top">
+            <div class="dc-icon" style="background:#FAEEDA">💰</div>
+            <div class="dc-title">Business case & ROI model</div>
+          </div>
+          <div class="dc-desc">CAD ROI numbers, Statistics Canada sources, Forrester benchmarks, expansion multiplier</div>
+          <div class="dc-meta"><span class="badge ba">Word doc</span><span class="dc-size">~18KB</span></div>
+        </a>
+        <a href="https://akshayanrajendran-tech.github.io/mona" target="_blank" class="doc-card" style="border-radius:0;border-bottom:none;border-top:none">
+          <div class="dc-top">
+            <div class="dc-icon" style="background:#EEEDFE">🏗️</div>
+            <div class="dc-title">Architecture & build guide</div>
+          </div>
+          <div class="dc-desc">5-layer stack, all 14 tools, every GPT-4o prompt verbatim, Power Automate flow configs</div>
+          <div class="dc-meta"><span class="badge bp">Word doc</span><span class="dc-size">~35KB</span></div>
+        </a>
+        <a href="https://akshayanrajendran-tech.github.io/mona" target="_blank" class="doc-card" style="border-radius:0;border-bottom:none;border-top:none">
+          <div class="dc-top">
+            <div class="dc-icon" style="background:#E6F1FB">📅</div>
+            <div class="dc-title">Sprint 1 complete package</div>
+          </div>
+          <div class="dc-desc">Week-by-week schedule, hour-by-hour Day 1–5 plan, success criteria, pilot checklist</div>
+          <div class="dc-meta"><span class="badge bb">Word doc</span><span class="dc-size">~25KB</span></div>
+        </a>
+        <a href="https://akshayanrajendran-tech.github.io/mona" target="_blank" class="doc-card" style="border-radius:0;border-bottom:none;border-top:none">
+          <div class="dc-top">
+            <div class="dc-icon" style="background:#EAF3DE">🔗</div>
+            <div class="dc-title">Facilitator integration guide</div>
+          </div>
+          <div class="dc-desc">4 Microsoft Facilitator integration bridges, recommended hybrid architecture</div>
+          <div class="dc-meta"><span class="badge" style="background:rgba(99,153,34,0.12);color:#639922">Word doc</span><span class="dc-size">~13KB</span></div>
+        </a>
+
+        <div style="margin-top:10px;padding:12px 0 4px;font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em">Quick resources</div>
+        <a href="https://copilotstudio.microsoft.com" target="_blank" class="res-card" style="border-radius:var(--r);margin-bottom:7px">
+          <div class="dc-top" style="margin-bottom:0">
+            <div class="dc-icon" style="background:rgba(13,122,106,0.12);font-size:13px">⚡</div>
+            <div><div class="dc-title" style="font-size:12px">Copilot Studio</div><div class="dc-desc">Build and manage Mona agents</div></div>
+            <span class="tool-arrow" style="margin-left:auto">→</span>
+          </div>
+        </a>
+        <a href="https://make.powerautomate.com" target="_blank" class="res-card" style="border-radius:var(--r);margin-bottom:7px">
+          <div class="dc-top" style="margin-bottom:0">
+            <div class="dc-icon" style="background:rgba(55,138,221,0.12);font-size:13px">🔄</div>
+            <div><div class="dc-title" style="font-size:12px">Power Automate</div><div class="dc-desc">Agent flows and automation pipelines</div></div>
+            <span class="tool-arrow" style="margin-left:auto">→</span>
+          </div>
+        </a>
+        <a href="https://make.powerapps.com" target="_blank" class="res-card" style="border-radius:var(--r)">
+          <div class="dc-top" style="margin-bottom:0">
+            <div class="dc-icon" style="background:rgba(127,119,221,0.12);font-size:13px">📱</div>
+            <div><div class="dc-title" style="font-size:12px">Power Apps</div><div class="dc-desc">This portal + future team apps</div></div>
+            <span class="tool-arrow" style="margin-left:auto">→</span>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
 <section id="capabilities">
   <div class="container">
-    <div class="sec-header fade-in">
-      <div class="sec-eyebrow">All 23 capabilities</div>
-      <h2 class="sec-title">Built to save time<br><em>and</em> solve real problems</h2>
-      <p class="sec-desc">Every capability does two things simultaneously — automates a daily task everyone does, and solves a specific product team problem. The split is intentional: 50% broad adoption, 50% deep product value.</p>
+    <div class="sec-head fade-in">
+      <div class="sec-eye">All 23 capabilities</div>
+      <h2 class="sec-title">50% daily automation.<br>50% <em>product use cases</em>.</h2>
+      <p class="sec-desc">Every capability does two things simultaneously — automates a daily task and solves a specific product team problem.</p>
     </div>
     <div class="sprint-tabs">
       <button class="sprint-tab active" onclick="filterCaps('all')">All 23</button>
-      <button class="sprint-tab" onclick="filterCaps('s1')">Sprint 1 — Foundation</button>
-      <button class="sprint-tab" onclick="filterCaps('s2')">Sprint 2 — Content</button>
-      <button class="sprint-tab" onclick="filterCaps('s3')">Sprint 3 — Personal</button>
-      <button class="sprint-tab" onclick="filterCaps('s4')">Sprint 4 — Enterprise</button>
+      <button class="sprint-tab" onclick="filterCaps('s1')">Sprint 1</button>
+      <button class="sprint-tab" onclick="filterCaps('s2')">Sprint 2</button>
+      <button class="sprint-tab" onclick="filterCaps('s3')">Sprint 3</button>
+      <button class="sprint-tab" onclick="filterCaps('s4')">Sprint 4</button>
+      <button class="sprint-tab" onclick="filterCaps('personal')">Personal AI</button>
       <button class="sprint-tab" onclick="filterCaps('daily')">Daily automation</button>
       <button class="sprint-tab" onclick="filterCaps('product')">Product use cases</button>
     </div>
@@ -1365,1010 +638,261 @@ body, body * {
   </div>
 </section>
 
-<!-- ═══ BUSINESS CASE ═══ -->
-<section id="business">
-  <div class="container">
-    <div class="sec-header fade-in">
-      <div class="sec-eyebrow">Business case</div>
-      <h2 class="sec-title">The numbers are<br><em>real</em></h2>
-      <p class="sec-desc">Every figure sourced from Statistics Canada, McKinsey, Forrester, ActivTrak, and Microsoft WorkLab. Not estimates — third-party benchmarks applied to your actual team.</p>
-    </div>
-    <div class="bc-grid fade-in">
-      <div class="bc-card dark">
-        <div class="bc-card-title">Sprint 1 return on investment</div>
-        <div class="roi-number">164×</div>
-        <div class="roi-label">$88,920 CAD saved annually<br>against $540 CAD annual cost</div>
-      </div>
-      <div class="bc-card">
-        <div class="bc-card-title">ROI model — 10 people, $47.14/hr</div>
-        <table class="stat-table">
-          <tr><td>Hours recovered / week (Cap 1 — meeting support)</td><td>30h</td></tr>
-          <tr><td>Hours recovered / week (Cap 2 — personal readiness)</td><td>20.8h</td></tr>
-          <tr><td>Hours recovered / week (Cap 4 — Jira nudge)</td><td>3h</td></tr>
-          <tr><td>Total hours / week</td><td class="green">38+ hours</td></tr>
-          <tr><td>Weekly value at $47.14 CAD/hr</td><td class="green">$1,791 CAD</td></tr>
-          <tr><td>Annual recovered capacity</td><td class="green">$88,920 CAD</td></tr>
-          <tr><td>Annual additional cost</td><td class="amber">$540 CAD</td></tr>
-          <tr><td>Payback period</td><td class="green">&lt; 2 hours</td></tr>
-        </table>
-      </div>
-    </div>
-    <div class="sec-eyebrow fade-in" style="margin-bottom:16px">Third-party benchmarks — all sourced</div>
-    <div class="sources-grid fade-in">
-      <div class="source-card">
-        <div class="source-org">McKinsey Global Institute</div>
-        <div class="source-stat">28%</div>
-        <div class="source-desc">of the workweek spent managing email — 11.2 hours per person</div>
-      </div>
-      <div class="source-card">
-        <div class="source-org">ActivTrak 2025</div>
-        <div class="source-stat">11.3h</div>
-        <div class="source-desc">average hours per week in meetings. 64% of recurring meetings have no agenda.</div>
-      </div>
-      <div class="source-card">
-        <div class="source-org">Asana 2024</div>
-        <div class="source-stat">60%</div>
-        <div class="source-desc">of knowledge worker time spent on work about work — not actual skilled work</div>
-      </div>
-      <div class="source-card">
-        <div class="source-org">Statistics Canada 2025</div>
-        <div class="source-stat">$47.14</div>
-        <div class="source-desc">CAD/hr average — professional, scientific and technical services (April 2025)</div>
-      </div>
-      <div class="source-card">
-        <div class="source-org">Forrester TEI — Microsoft 2025</div>
-        <div class="source-stat">116%</div>
-        <div class="source-desc">ROI over 3 years. $19.7M USD NPV. 9 hours saved per user per month.</div>
-      </div>
-      <div class="source-card">
-        <div class="source-org">Microsoft WorkLab</div>
-        <div class="source-stat">51%</div>
-        <div class="source-desc">of the workday goes to low or no-value tasks. 50% of teams spend 1+ day/month on status collation.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ ARCHITECTURE ═══ -->
-<section id="architecture">
-  <div class="container">
-    <div class="sec-header fade-in">
-      <div class="sec-eyebrow">Technical architecture</div>
-      <h2 class="sec-title">One agent.<br><em>Everything</em> Microsoft.</h2>
-      <p class="sec-desc">Five layers, 14 tools, zero new vendors. Every service runs inside your existing Azure tenant. Updated for Microsoft Build 2026 — agent flows GA, computer use GA.</p>
-    </div>
-    <div class="arch-layers fade-in" id="archLayers"></div>
-    <div class="sec-eyebrow fade-in" style="margin-top:40px;margin-bottom:16px">All 14 tools — included in M365 E5 or existing Azure</div>
-    <div class="tool-chips fade-in" id="toolChips"></div>
-  </div>
-</section>
-
-<!-- ═══ SPRINT PLAN ═══ -->
+<!-- SPRINT PLAN -->
 <section id="sprints">
   <div class="container">
-    <div class="sec-header fade-in">
-      <div class="sec-eyebrow">12-month roadmap</div>
+    <div class="sec-head fade-in">
+      <div class="sec-eye">12-month roadmap</div>
       <h2 class="sec-title">Four sprints.<br><em>Compounding</em> value.</h2>
-      <p class="sec-desc">Each sprint is self-contained — it delivers real value immediately — and builds the infrastructure that makes the next sprint cheaper and faster to build.</p>
+      <p class="sec-desc">Each sprint delivers immediate value and builds the infrastructure that makes the next sprint cheaper and faster.</p>
     </div>
     <div class="sprint-timeline fade-in" id="sprintTimeline"></div>
   </div>
 </section>
 
-<!-- ═══ JIRA ═══ -->
-<section id="jira">
+<!-- BUSINESS CASE -->
+<section id="business">
   <div class="container">
-    <div class="sec-header fade-in">
-      <div class="sec-eyebrow">Jira + Product Discovery</div>
-      <h2 class="sec-title">Run the project<br>like a <em>real PM</em></h2>
-      <p class="sec-desc">Not just integrating with Jira — managing this entire project in Jira. Four epics, stories with acceptance criteria, and Jira Product Discovery tracking pilot user insights that feed the Sprint 2 roadmap.</p>
+    <div class="sec-head fade-in">
+      <div class="sec-eye">Business case</div>
+      <h2 class="sec-title">The numbers<br>are <em>real</em></h2>
+      <p class="sec-desc">Every figure sourced from Statistics Canada, McKinsey, Forrester, ActivTrak, and Microsoft WorkLab. Not estimates — benchmarks applied to your actual team.</p>
     </div>
-    <div class="jira-grid fade-in">
-      <div class="jira-board">
-        <div class="jira-board-header">
-          <svg width="16" height="16" viewBox="0 0 32 32" fill="none"><path d="M15.975 0C7.15 0 0 7.15 0 15.975s7.15 15.975 15.975 15.975S31.95 22.8 31.95 15.975 24.8 0 15.975 0z" fill="#2684FF"/><path d="M15.975 6.39l-9.585 9.585 9.585 9.585 9.585-9.585-9.585-9.585z" fill="url(#jira-grad)"/><defs><linearGradient id="jira-grad" x1="9.39" y1="15.975" x2="22.56" y2="15.975" gradientUnits="userSpaceOnUse"><stop stop-color="#0052CC"/><stop offset="1" stop-color="#2684FF"/></linearGradient></defs></svg>
-          <span class="jira-board-title">Mona — Sprint 1 board</span>
-        </div>
-        <div style="padding:14px">
-          <div class="jira-cols">
-            <div>
-              <div class="jira-col-title">To do</div>
-              <div class="jira-ticket">
-                <div class="jira-ticket-key">PAI-12</div>
-                <div class="jira-ticket-title">Build 9am sprint health agent flow</div>
-                <div class="jira-ticket-meta">
-                  <div class="jira-priority" style="background:#FF7452"></div>
-                  <div class="jira-avatar" style="background:#5240B5">AK</div>
-                </div>
-              </div>
-              <div class="jira-ticket">
-                <div class="jira-ticket-key">PAI-13</div>
-                <div class="jira-ticket-title">Add Confluence knowledge source</div>
-                <div class="jira-ticket-meta">
-                  <div class="jira-priority" style="background:#FFAB00"></div>
-                  <div class="jira-avatar" style="background:#0052CC">JM</div>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="jira-col-title">In progress</div>
-              <div class="jira-ticket">
-                <div class="jira-ticket-key">PAI-08</div>
-                <div class="jira-ticket-title">Morning brief — Jira fetch branch</div>
-                <div class="jira-ticket-meta">
-                  <div class="jira-priority" style="background:#FF7452"></div>
-                  <div class="jira-avatar" style="background:#00875A">SR</div>
-                </div>
-              </div>
-              <div class="jira-ticket">
-                <div class="jira-ticket-key">PAI-09</div>
-                <div class="jira-ticket-title">Channel summariser topic</div>
-                <div class="jira-ticket-meta">
-                  <div class="jira-priority" style="background:#FFAB00"></div>
-                  <div class="jira-avatar" style="background:#5240B5">AK</div>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div class="jira-col-title">Done</div>
-              <div class="jira-ticket" style="opacity:0.7">
-                <div class="jira-ticket-key">PAI-01</div>
-                <div class="jira-ticket-title">Copilot Studio agent created</div>
-                <div class="jira-ticket-meta">
-                  <div class="jira-priority" style="background:#36B37E"></div>
-                  <div class="jira-avatar" style="background:#0052CC">JM</div>
-                </div>
-              </div>
-              <div class="jira-ticket" style="opacity:0.7">
-                <div class="jira-ticket-key">PAI-02</div>
-                <div class="jira-ticket-title">SharePoint libraries created</div>
-                <div class="jira-ticket-meta">
-                  <div class="jira-priority" style="background:#36B37E"></div>
-                  <div class="jira-avatar" style="background:#00875A">SR</div>
-                </div>
-              </div>
-              <div class="jira-ticket" style="opacity:0.7">
-                <div class="jira-ticket-key">PAI-03</div>
-                <div class="jira-ticket-title">Teams transcription enabled</div>
-                <div class="jira-ticket-meta">
-                  <div class="jira-priority" style="background:#36B37E"></div>
-                  <div class="jira-avatar" style="background:#5240B5">AK</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="pd-insights">
-        <div class="pd-header">
-          <div class="pd-title">Jira Product Discovery — insights board</div>
-          <div class="pd-sub">Pilot user feedback → insights → Sprint 2 roadmap</div>
-        </div>
-        <div class="pd-body">
-          <div class="pd-insight">
-            <div class="pd-insight-title">Morning brief should include Confluence page updates</div>
-            <div class="pd-insight-meta">
-              <span class="pd-votes">▲ 4 votes</span>
-              <span class="pd-theme">Enhancement</span>
-              <span class="badge badge-blue" style="font-size:9px">Maps to Sprint 2</span>
-            </div>
-          </div>
-          <div class="pd-insight">
-            <div class="pd-insight-title">Channel summariser needs date range filter — not just 24h</div>
-            <div class="pd-insight-meta">
-              <span class="pd-votes">▲ 6 votes</span>
-              <span class="pd-theme">Feature request</span>
-              <span class="badge badge-teal" style="font-size:9px">Backlog</span>
-            </div>
-          </div>
-          <div class="pd-insight">
-            <div class="pd-insight-title">Sales team wants sprint health card for their pipeline tracker</div>
-            <div class="pd-insight-meta">
-              <span class="pd-votes">▲ 8 votes</span>
-              <span class="pd-theme">Expansion</span>
-              <span class="badge badge-amber" style="font-size:9px">High signal</span>
-            </div>
-          </div>
-          <div class="pd-insight">
-            <div class="pd-insight-title">Meeting capture should also log decisions, not just actions</div>
-            <div class="pd-insight-meta">
-              <span class="pd-votes">▲ 5 votes</span>
-              <span class="pd-theme">Enhancement</span>
-              <span class="badge badge-blue" style="font-size:9px">Maps to Sprint 2</span>
-            </div>
-          </div>
-          <div class="pd-insight">
-            <div class="pd-insight-title">HR team wants onboarding brief for new hires</div>
-            <div class="pd-insight-meta">
-              <span class="pd-votes">▲ 11 votes</span>
-              <span class="pd-theme">New use case</span>
-              <span class="badge badge-amber" style="font-size:9px">High signal</span>
-            </div>
-          </div>
-          <div style="padding:10px 0;font-size:11px;color:var(--text3);text-align:center;border-top:1px solid var(--border);margin-top:4px">
-            Synthesised weekly by Mona feedback synthesiser (Cap 8) · Updated Friday 4pm
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ COST MODEL ═══ -->
-<section id="costs">
-  <div class="container">
-    <div class="sec-header fade-in">
-      <div class="sec-eyebrow">Cost model — CAD</div>
-      <h2 class="sec-title">$9 per person<br>at <em>50 people</em></h2>
-      <p class="sec-desc">The Copilot Studio credit pack is flat per tenant — adding a department costs almost nothing marginal. Everything else scales at consumption rates.</p>
-    </div>
-    <div class="cost-grid fade-in">
-      <div class="bc-card">
-        <div class="bc-card-title">What you already pay for — M365 E5</div>
-        <table class="cost-table">
-          <tr><th>Service</th><th>Monthly cost</th></tr>
-          <tr><td>Teams transcription + recording</td><td class="free">$0 — E5 included</td></tr>
-          <tr><td>Microsoft Graph API</td><td class="free">$0 — E5 included</td></tr>
-          <tr><td>SharePoint document storage</td><td class="free">$0 — E5 included</td></tr>
-          <tr><td>Power Automate (standard connectors)</td><td class="free">$0 — E5 included</td></tr>
-          <tr><td>Power BI Pro</td><td class="free">$0 — E5 included</td></tr>
-          <tr><td>Viva Insights</td><td class="free">$0 — E5 included</td></tr>
-          <tr><td>Microsoft Purview</td><td class="free">$0 — E5 included</td></tr>
-          <tr><td>Entra ID</td><td class="free">$0 — E5 included</td></tr>
-        </table>
+    <div class="bc-grid fade-in">
+      <div class="bc-card dark">
+        <div class="bc-label">Sprint 1 ROI</div>
+        <div class="roi-n">164×</div>
+        <div class="roi-l">$88,920 CAD saved annually<br>against $540 CAD annual cost</div>
       </div>
       <div class="bc-card">
-        <div class="bc-card-title">New costs — Sprint 1 (~$45 CAD/month)</div>
-        <table class="cost-table">
-          <tr><th>Service</th><th>Monthly cost</th></tr>
-          <tr><td>Copilot Studio credit pack (25,000 credits/tenant)</td><td class="cost">$271.40 flat</td></tr>
-          <tr><td>Power Automate Premium (3 flows)</td><td class="cost">$66.00</td></tr>
-          <tr><td>Azure OpenAI GPT-4o (~3–5M tokens)</td><td class="cost">$45–80</td></tr>
-          <tr><td>Azure AI Speech tts-1</td><td class="cost">$15–22</td></tr>
-          <tr><td>Azure AI Search Basic tier</td><td class="cost">$14–18</td></tr>
-          <tr><td>Azure Functions</td><td class="cost">~$4</td></tr>
-          <tr class="cost-total-row"><td>Total Sprint 1 (midpoint)</td><td class="cost">~$430–460 CAD/mo</td></tr>
-        </table>
-        <div class="sec-eyebrow" style="margin-top:20px;margin-bottom:10px">Cost per user — scale advantage</div>
-        <table class="scale-table">
-          <tr><td>10 people</td><td>$43 CAD/user/month</td></tr>
-          <tr><td>25 people</td><td>$17 CAD/user/month</td></tr>
-          <tr><td>50 people</td><td style="color:var(--teal);font-weight:600">$9 CAD/user/month</td></tr>
-          <tr><td>M365 Copilot add-on (comparison)</td><td style="color:var(--amber);font-weight:500">$41/user/month extra</td></tr>
+        <div class="bc-label">ROI model — 10 people · $47.14/hr CAD</div>
+        <table class="stat-t">
+          <tr><td>Meeting support (Cap 1)</td><td>30h/week</td></tr>
+          <tr><td>Personal readiness (Cap 2)</td><td>20.8h/week</td></tr>
+          <tr><td>Jira nudge (Cap 4)</td><td>3h/week</td></tr>
+          <tr><td>Total recovered</td><td class="green">38+ h/week</td></tr>
+          <tr><td>Weekly value</td><td class="green">$1,791 CAD</td></tr>
+          <tr><td>Annual saving</td><td class="green">$88,920 CAD</td></tr>
+          <tr><td>Annual cost</td><td class="amber">$540 CAD</td></tr>
+          <tr><td>Payback period</td><td class="green">&lt; 2 hours</td></tr>
         </table>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ═══ CAPSTONE ═══ -->
-<section id="capstone">
-  <div class="container">
-    <div class="sec-header fade-in">
-      <div class="sec-eyebrow">Internship capstone</div>
-      <h2 class="sec-title">Three deliverables.<br>One <em>coherent story</em>.</h2>
-      <p class="sec-desc">The working prototype is the evidence. The document is the analysis. The presentation is the pitch. All three say the same thing in different registers.</p>
-    </div>
-    <div class="capstone-grid fade-in">
-      <div class="capstone-card d1">
-        <div class="capstone-num">01</div>
-        <div class="capstone-title">Working prototype</div>
-        <div class="capstone-desc">All 10 Sprint 1+2 capabilities running on real data from your actual team. Not a mockup — a live system your colleagues used for two weeks, with measurable results.</div>
-        <ul class="capstone-list">
-          <li>Copilot Studio agent live in Teams</li>
-          <li>5 agent flows running on schedule</li>
-          <li>Real hours saved — measured, not estimated</li>
-          <li>Screen recordings of every capability working</li>
-          <li>Pilot feedback from 3+ team members</li>
-        </ul>
-      </div>
-      <div class="capstone-card d2">
-        <div class="capstone-num">02</div>
-        <div class="capstone-title">Project document</div>
-        <div class="capstone-desc">Full business case with third-party sources, technical architecture across all 14 tools, risk register, 12-month expansion roadmap, and pilot results replacing estimates.</div>
-        <ul class="capstone-list">
-          <li>Executive summary with real CAD ROI</li>
-          <li>All 23 capabilities documented</li>
-          <li>Third-party benchmarks cited throughout</li>
-          <li>Architecture diagram — 5-layer stack</li>
-          <li>Pilot results vs estimates comparison</li>
-        </ul>
-      </div>
-      <div class="capstone-card d3">
-        <div class="capstone-num">03</div>
-        <div class="capstone-title">Presentation</div>
-        <div class="capstone-desc">Structured exactly like a PM pitching a product internally: problem, solution, live demo, evidence, ROI, roadmap, ask. The Jira Product Discovery thread runs throughout.</div>
-        <ul class="capstone-list">
-          <li>Live demo of 5+ capabilities</li>
-          <li>Real pilot ROI numbers on screen</li>
-          <li>Jira PD discovery journey shown</li>
-          <li>Expansion pitch built into the close</li>
-          <li>Ask: budget + headcount for Sprint 3</li>
-        </ul>
-      </div>
-    </div>
-    <div class="meta-moment fade-in">
-      <div class="mm-text">
-        <h3>The <em>meta-moment</em> that wins the room</h3>
-        <p>During Week 2, the customer feedback synthesiser runs Jira Product Discovery on its own pilot feedback. The agent synthesises its own improvement backlog. You use the output to plan Sprint 2. This is product management with AI — and it's the single most memorable story you can tell in your capstone.</p>
-      </div>
-      <div class="mm-flow">
-        <div class="mm-node">Portal<br>request</div>
-        <div class="mm-arrow">→</div>
-        <div class="mm-node">Jira PD<br>insight</div>
-        <div class="mm-arrow">→</div>
-        <div class="mm-node">Feedback<br>synthesiser</div>
-        <div class="mm-arrow">→</div>
-        <div class="mm-node">Sprint 2<br>roadmap</div>
-      </div>
+    <div class="src-grid fade-in">
+      <div class="src-card"><div class="src-org">McKinsey Global Institute</div><div class="src-stat">28%</div><div class="src-desc">of workweek on email — 11.2h per person</div></div>
+      <div class="src-card"><div class="src-org">ActivTrak 2025</div><div class="src-stat">11.3h</div><div class="src-desc">average per week in meetings · 64% have no agenda</div></div>
+      <div class="src-card"><div class="src-org">Asana 2024</div><div class="src-stat">60%</div><div class="src-desc">of knowledge worker time on work about work</div></div>
+      <div class="src-card"><div class="src-org">Statistics Canada 2025</div><div class="src-stat">$47.14</div><div class="src-desc">CAD/hr · professional services · April 2025</div></div>
+      <div class="src-card"><div class="src-org">Forrester TEI 2025</div><div class="src-stat">116%</div><div class="src-desc">ROI over 3 years · $19.7M NPV · 9h saved/user/month</div></div>
+      <div class="src-card"><div class="src-org">Microsoft WorkLab</div><div class="src-stat">51%</div><div class="src-desc">of workday goes to low or no-value tasks</div></div>
     </div>
   </div>
 </section>
 
-
-<!-- ═══ DOCUMENTATION TEAM ═══ -->
-<section id="docs">
-  <div class="container">
-    <div class="sec-header fade-in">
-      <div class="sec-eyebrow">Documentation team</div>
-      <h2 class="sec-title">From documentation<br><em>burden</em> to automation</h2>
-      <p class="sec-desc">Documentation teams spend 60%+ of their time on manual content production, version management, and cross-team coordination. Mona eliminates the repetitive work so the team can focus on quality and strategy.</p>
-    </div>
-
-    <div class="docs-hero fade-in">
-      <div class="docs-hero-text">
-        <h3>Docs used to take <em>weeks</em>.<br>Now it takes minutes.</h3>
-        <p>Every release ships with complete documentation — release notes, API guides, training materials, multi-audience versions — all produced automatically from Jira, Confluence, and Teams data. The documentation team reviews and approves. They no longer write from scratch.</p>
-      </div>
-      <div class="docs-stats">
-        <div>
-          <div class="docs-stat-n">2wk</div>
-          <div class="docs-stat-l">→ 90 min<br>training content</div>
-        </div>
-        <div>
-          <div class="docs-stat-n">4×</div>
-          <div class="docs-stat-l">versions from<br>one brief</div>
-        </div>
-        <div>
-          <div class="docs-stat-n">$0</div>
-          <div class="docs-stat-l">extra cost for<br>docs team</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sec-eyebrow fade-in" style="margin-bottom:16px">Current pain points — solved by Mona</div>
-    <div class="docs-pain-grid fade-in">
-      <div class="docs-pain">
-        <div class="docs-pain-icon">✍️</div>
-        <div>
-          <div class="docs-pain-title">Writing release notes from scratch every release</div>
-          <div class="docs-pain-desc">Manually reading Jira tickets, grouping by type, writing customer-facing descriptions, formatting, reviewing. Repeated for every release.</div>
-          <div class="docs-pain-time">Eliminated — automated by Cap 06 Release Notes Autopilot</div>
-        </div>
-      </div>
-      <div class="docs-pain">
-        <div class="docs-pain-icon">🔄</div>
-        <div>
-          <div class="docs-pain-title">Rewriting the same content for different audiences</div>
-          <div class="docs-pain-desc">The same product update rewritten 4 times: technical for engineering, value-focused for sales, FAQ-style for support, executive summary for leadership.</div>
-          <div class="docs-pain-time">Eliminated — automated by Cap 11 Multi-Audience Comms Engine</div>
-        </div>
-      </div>
-      <div class="docs-pain">
-        <div class="docs-pain-icon">🎬</div>
-        <div>
-          <div class="docs-pain-title">Producing training videos and guides per feature</div>
-          <div class="docs-pain-desc">Script writing, narration recording, video editing, uploading to learning platform. 2-week process per feature. Means most features ship with no training content at all.</div>
-          <div class="docs-pain-time">Eliminated — automated by Cap 23 Video Training Pipeline</div>
-        </div>
-      </div>
-      <div class="docs-pain">
-        <div class="docs-pain-icon">🔍</div>
-        <div>
-          <div class="docs-pain-title">Keeping Confluence up to date manually</div>
-          <div class="docs-pain-desc">Checking which docs are stale, finding what changed in Jira, updating Confluence pages, notifying stakeholders. A full-time task nobody has time for.</div>
-          <div class="docs-pain-time">Eliminated — automated by Cap 03 AI Info Directory + weekly digest</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sec-eyebrow fade-in" style="margin-bottom:16px">6 capabilities built specifically for documentation teams</div>
-    <div class="docs-caps-grid fade-in">
-
-      <div class="docs-cap">
-        <div class="docs-cap-header">
-          <div class="docs-cap-icon">📋</div>
-          <div>
-            <div class="docs-cap-title">Release notes autopilot</div>
-            <span class="docs-cap-tag">Cap 06 · Sprint 2</span>
-          </div>
-        </div>
-        <div class="docs-cap-desc">Jira webhook fires on version released. GPT-4o reads every resolved ticket, groups by type (new features, improvements, bug fixes), writes customer-facing descriptions in your house style. Word doc to SharePoint. Confluence page published. Teams notification sent.</div>
-        <div class="docs-cap-detail"><strong>Input:</strong> Jira version release event<br><strong>Output:</strong> Word doc + Confluence page + Teams notification<br><strong>Time saved:</strong> 3–4 hours per release, every release</div>
-      </div>
-
-      <div class="docs-cap">
-        <div class="docs-cap-header">
-          <div class="docs-cap-icon">📣</div>
-          <div>
-            <div class="docs-cap-title">Multi-audience comms engine</div>
-            <span class="docs-cap-tag">Cap 11 · Sprint 2</span>
-          </div>
-        </div>
-        <div class="docs-cap-desc">Submit one product brief. Mona generates 4 tailored versions in parallel: technical deep-dive for engineering, value proposition for sales, FAQ-style for customer support, and executive summary for leadership. All published to Confluence simultaneously with a Teams card linking all 4.</div>
-        <div class="docs-cap-detail"><strong>Input:</strong> One product brief in Teams chat<br><strong>Output:</strong> 4 Confluence pages, Teams card<br><strong>Time saved:</strong> 3 hours per release communication</div>
-      </div>
-
-      <div class="docs-cap">
-        <div class="docs-cap-header">
-          <div class="docs-cap-icon">🎬</div>
-          <div>
-            <div class="docs-cap-title">Video training pipeline</div>
-            <span class="docs-cap-tag">Cap 23 · Sprint 4</span>
-          </div>
-        </div>
-        <div class="docs-cap-desc">Point Mona at any Jira epic. GPT-4o writes a structured training script with chapters and learning objectives. Azure AI Speech narrates using a neural voice. Clipchamp assembles the video. Uploaded to Viva Learning as a course. End-to-end: 90 minutes.</div>
-        <div class="docs-cap-detail"><strong>Input:</strong> Jira epic key<br><strong>Output:</strong> Narrated video in Viva Learning<br><strong>Time saved:</strong> 2 weeks → 90 minutes per module</div>
-      </div>
-
-      <div class="docs-cap">
-        <div class="docs-cap-header">
-          <div class="docs-cap-icon">🌐</div>
-          <div>
-            <div class="docs-cap-title">Multilingual content engine</div>
-            <span class="docs-cap-tag">Cap 20 · Sprint 4</span>
-          </div>
-        </div>
-        <div class="docs-cap-desc">Every document Mona produces — release notes, training scripts, meeting minutes, morning briefs — auto-translated to French Canadian via Azure AI Translator immediately after creation. Bilingual compliance maintained automatically. EN and FR versions stored side-by-side in SharePoint.</div>
-        <div class="docs-cap-detail"><strong>Input:</strong> Any Mona-created document<br><strong>Output:</strong> EN + FR versions in SharePoint<br><strong>Time saved:</strong> Translation backlog eliminated</div>
-      </div>
-
-      <div class="docs-cap">
-        <div class="docs-cap-header">
-          <div class="docs-cap-icon">🔍</div>
-          <div>
-            <div class="docs-cap-title">Azure AI Search knowledge index</div>
-            <span class="docs-cap-tag">Cap 22 · Sprint 4</span>
-          </div>
-        </div>
-        <div class="docs-cap-desc">All Confluence pages, SharePoint docs, meeting minutes, and training videos indexed semantically. Any team member — or the docs team themselves — can ask "what is our API deprecation policy?" and get the exact section, page link, and confidence score. Video timestamp search included.</div>
-        <div class="docs-cap-detail"><strong>Input:</strong> Natural language question<br><strong>Output:</strong> Answer with source + Confluence link<br><strong>Time saved:</strong> 9.3h/person/week of document searching</div>
-      </div>
-
-      <div class="docs-cap">
-        <div class="docs-cap-header">
-          <div class="docs-cap-icon">📊</div>
-          <div>
-            <div class="docs-cap-title">Confluence weekly digest</div>
-            <span class="docs-cap-tag">Custom · Sprint 1</span>
-          </div>
-        </div>
-        <div class="docs-cap-desc">Every Monday 8:30am: Mona scans all Confluence spaces for pages updated in the last 7 days. GPT-4o summarises what changed, why it matters, and which docs may need updating as a result. Posted to the documentation team channel. Stale content flagged automatically.</div>
-        <div class="docs-cap-detail"><strong>Input:</strong> Confluence REST API — last 7 days<br><strong>Output:</strong> Monday morning Teams digest<br><strong>Time saved:</strong> Weekly content audit eliminated</div>
-      </div>
-
-    </div>
-
-    <div class="docs-workflow fade-in">
-      <div class="docs-workflow-title">
-        <span style="background:#E1F5EE;border-radius:99px;padding:3px 10px;font-size:11px;color:#085041;font-weight:500">End-to-end release documentation workflow — fully automated</span>
-      </div>
-      <div class="docs-flow-steps">
-        <div class="docs-flow-step">
-          <div class="docs-flow-step-num">01</div>
-          <div class="docs-flow-step-title">Jira release</div>
-          <div class="docs-flow-step-sub">Version marked<br>released</div>
-        </div>
-        <div class="docs-flow-arrow">→</div>
-        <div class="docs-flow-step">
-          <div class="docs-flow-step-num">02</div>
-          <div class="docs-flow-step-title">Tickets fetched</div>
-          <div class="docs-flow-step-sub">All resolved issues<br>grouped by type</div>
-        </div>
-        <div class="docs-flow-arrow">→</div>
-        <div class="docs-flow-step">
-          <div class="docs-flow-step-num">03</div>
-          <div class="docs-flow-step-title">GPT-4o writes</div>
-          <div class="docs-flow-step-sub">4 audience versions<br>simultaneously</div>
-        </div>
-        <div class="docs-flow-arrow">→</div>
-        <div class="docs-flow-step">
-          <div class="docs-flow-step-num">04</div>
-          <div class="docs-flow-step-title">EN + FR</div>
-          <div class="docs-flow-step-sub">Azure Translator<br>auto-applied</div>
-        </div>
-        <div class="docs-flow-arrow">→</div>
-        <div class="docs-flow-step">
-          <div class="docs-flow-step-num">05</div>
-          <div class="docs-flow-step-title">Docs review</div>
-          <div class="docs-flow-step-sub">Teams approval<br>card — 1 click</div>
-        </div>
-        <div class="docs-flow-arrow">→</div>
-        <div class="docs-flow-step">
-          <div class="docs-flow-step-num">06</div>
-          <div class="docs-flow-step-title">Published</div>
-          <div class="docs-flow-step-sub">Confluence + Word<br>+ Viva Learning</div>
-        </div>
-      </div>
-      <div class="docs-tools-row">
-        <span class="badge badge-blue">Jira webhook</span>
-        <span class="badge badge-teal">Azure OpenAI GPT-4o</span>
-        <span class="badge badge-teal">Azure AI Translator</span>
-        <span class="badge badge-purple">Confluence API</span>
-        <span class="badge badge-navy">Word Online</span>
-        <span class="badge badge-gray">Teams approval card</span>
-        <span class="badge badge-gray">Viva Learning</span>
-        <span class="badge badge-gray">Microsoft Purview</span>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ═══ REQUEST ═══ -->
+<!-- REQUEST -->
 <section id="request">
   <div class="container">
-    <div class="request-inner">
-      <div class="request-left">
-        <div class="sec-eyebrow">Request a capability</div>
-        <h2 class="sec-title" style="color:white">Tell us what<br>to <em>automate</em> next</h2>
-        <p class="sec-desc">Submissions go directly to Jira Product Discovery as new insights. Reviewed weekly. The most-voted ideas become the next sprint.</p>
-        <div class="request-stats">
-          <div class="request-stat">
-            <div class="rs-n">23</div>
-            <div class="rs-l">capabilities built so far<br>across 4 sprints</div>
-          </div>
-          <div class="request-stat">
-            <div class="rs-n">$0</div>
-            <div class="rs-l">additional cost to add<br>a new department</div>
-          </div>
-          <div class="request-stat">
-            <div class="rs-n">5d</div>
-            <div class="rs-l">average time from<br>request to live</div>
-          </div>
+    <div class="req-inner">
+      <div class="req-left">
+        <div class="sec-eye">Request a capability</div>
+        <h2 class="sec-title" style="color:#fff">Tell us what<br>to <em>automate</em> next</h2>
+        <p class="sec-desc">Submissions go directly to Jira Product Discovery. Reviewed weekly. Most-voted ideas become the next sprint.</p>
+        <div class="req-stats">
+          <div class="req-stat"><div class="rsn">23</div><div class="rsl">capabilities built across 4 sprints</div></div>
+          <div class="req-stat"><div class="rsn">$0</div><div class="rsl">additional cost to add a department</div></div>
+          <div class="req-stat"><div class="rsn">5d</div><div class="rsl">average request to live</div></div>
         </div>
       </div>
       <div class="form-card">
-        <div class="form-group">
-          <label class="form-label">What task do you repeat regularly?</label>
-          <textarea class="form-textarea" id="f-task" placeholder="e.g. Manually copying Jira updates into a weekly email for stakeholders"></textarea>
+        <label class="fl">What task do you repeat?</label>
+        <textarea class="fta" id="f-task" placeholder="e.g. Copying Jira updates into a weekly stakeholder email"></textarea>
+        <div class="fr">
+          <div><label class="fl">How often?</label><select class="fs" id="f-freq"><option value="">Select</option><option>Multiple times daily</option><option>Daily</option><option>Weekly</option><option>Monthly</option></select></div>
+          <div><label class="fl">Time it takes</label><input class="fi" id="f-time" type="text" placeholder="e.g. 30 min"></div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">How often?</label>
-            <select class="form-select" id="f-freq">
-              <option value="">Select frequency</option>
-              <option>Multiple times a day</option>
-              <option>Daily</option>
-              <option>Weekly</option>
-              <option>Monthly</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Time it takes</label>
-            <input class="form-input" id="f-time" type="text" placeholder="e.g. 30 minutes">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Which team are you on?</label>
-          <select class="form-select" id="f-team">
-            <option value="">Select your team</option>
-            <option>Product</option>
-            <option>Engineering</option>
-            <option>Sales</option>
-            <option>Customer Support</option>
-            <option>Human Resources</option>
-            <option>Finance</option>
-            <option>Marketing</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Your name (optional)</label>
-          <input class="form-input" id="f-name" type="text" placeholder="Alex Chen">
-        </div>
-        <button class="form-submit" onclick="submitRequest()">Submit to Jira Product Discovery →</button>
-        <div class="form-note">Goes to the Mona backlog · reviewed every Friday · top insights become next sprint</div>
+        <label class="fl">Your team</label>
+        <select class="fs" id="f-team"><option value="">Select team</option><option>Product</option><option>Engineering</option><option>Documentation</option><option>Sales</option><option>Support</option><option>HR</option><option>Finance</option><option>Other</option></select>
+        <label class="fl" style="margin-top:4px">Name (optional)</label>
+        <input class="fi" id="f-name" type="text" placeholder="Alex Chen">
+        <button class="fsub" onclick="submitRequest()">Submit to Jira Product Discovery →</button>
+        <div class="fnote">Goes to the Mona backlog · reviewed every Friday · top insights become next sprint</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ FOOTER ═══ -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-left">
-      <strong>Mona</strong> — Internal AI agent suite · Product enablement internship capstone · Built on Microsoft 365 E5 + Copilot Studio + Azure OpenAI · June 2026
-    </div>
-    <div class="footer-links">
+  <div class="foot-inner">
+    <div class="foot-l"><strong>Mona</strong> — AI Platform · Product enablement internship capstone · M365 E5 + Copilot Studio + Azure OpenAI · June 2026</div>
+    <div class="foot-links">
+      <a href="#platform">Platform</a>
       <a href="#capabilities">Capabilities</a>
       <a href="#business">Business case</a>
-      <a href="#architecture">Architecture</a>
-      <a href="#capstone">Capstone</a>
+      <a href="https://akshayanrajendran-tech.github.io/mona" target="_blank">GitHub</a>
     </div>
   </div>
 </footer>
 
-<!-- ═══ TOAST ═══ -->
-<div class="toast" id="toast">
-  <div class="toast-dot"></div>
-  <span id="toast-msg">Submitted to Jira Product Discovery ✓</span>
-</div>
+<div class="toast" id="toast"><div class="tdot"></div><span id="tmsg">Submitted to Jira Product Discovery ✓</span></div>
 
 <script>
-/* ── DATA ── */
+/* ── CAPABILITIES DATA ── */
 const caps = [
-  {num:"01",sprint:"s1",type:"daily",color:"teal",icon:"🤖",name:"Teams AI agent",
-   desc:"Always-on conversational assistant in Microsoft Teams. Searches SharePoint and Confluence, drafts emails, answers any product question with source citations.",
-   auto:"Instant answers from any doc without pinging anyone",
-   usecase:"Living product knowledge base — roadmap decisions on demand",
-   saving:"Foundation",day:"Day 1 · 2h",tools:["Copilot Studio","SharePoint","Confluence"]},
-  {num:"02",sprint:"s1",type:"both",color:"amber",icon:"☀️",name:"Personal readiness — 8am brief",
-   desc:"Daily personalised Teams message at 8am: overnight emails scored by importance, Jira sprint status, calendar prep notes, GPT-4o 5-item priority list.",
-   auto:"25 min of morning triage eliminated per person",
-   usecase:"Sprint blockers and stakeholder emails surfaced before standup",
-   saving:"25 min/person/day",day:"Day 2 · 3h",tools:["Outlook","Jira","Azure OpenAI","Teams"]},
-  {num:"03",sprint:"s1",type:"daily",color:"purple",icon:"📚",name:"AI support + info directory",
-   desc:"Self-maintaining capability directory on SharePoint. Answers what can you do, walks through any tool step-by-step, logs feature requests automatically.",
-   auto:"New joiners self-serve — zero human onboarding time",
-   usecase:"Product knowledge base — any decision findable in seconds",
-   saving:"Onboarding time",day:"Day 3 · 1h",tools:["Copilot Studio","SharePoint","Azure AI Search"]},
-  {num:"04",sprint:"s1",type:"both",color:"blue",icon:"📊",name:"Jira daily nudge + sprint intelligence",
-   desc:"9am: personal ticket nudge per team member with GPT-4o insights. Team sprint health card to product channel: completion %, velocity, blockers, 3-sentence narrative.",
-   auto:"All manual sprint reporting eliminated",
-   usecase:"Leadership sees sprint status without asking — daily, automatically",
-   saving:"3h/week reporting",day:"Day 4 · 2h",tools:["Jira","Azure OpenAI","Teams","Power BI"]},
-  {num:"05",sprint:"s1",type:"daily",color:"green",icon:"📝",name:"Meeting chat capture",
-   desc:"@Mona action: [text] / [owner] during any Teams meeting. Captured instantly to SharePoint. End-of-meeting summary posted to channel with all actions grouped by owner.",
-   auto:"No note-taker needed — actions logged live",
-   usecase:"Sprint reviews and planning — actions captured with owners automatically",
-   saving:"2h/meeting admin",day:"Day 5 · 2h",tools:["SharePoint","Copilot Studio topic","Teams"]},
-  {num:"06",sprint:"s2",type:"product",color:"red",icon:"📋",name:"Release notes autopilot",
-   desc:"Jira webhook on version released triggers full pipeline automatically. GPT-4o groups resolved issues, writes customer-facing notes. Word doc to SharePoint. Teams notification.",
-   auto:"3-4 hours per release eliminated entirely",
-   usecase:"Release communications automated — no PM writing required",
-   saving:"3–4h/release",day:"Week 2 D1",tools:["Jira webhook","Azure OpenAI","Word","Confluence"]},
-  {num:"07",sprint:"s2",type:"product",color:"amber",icon:"📊",name:"AI slide deck generator",
-   desc:"Type a Jira epic key. Agent fetches epic and child stories. GPT-4o generates slide outline with speaker notes. PowerPoint created via Graph API. Link returned in 5 minutes.",
-   auto:"2.5 hours of deck prep eliminated",
-   usecase:"Sprint review and roadmap presentations built automatically from Jira",
-   saving:"2.5h/deck",day:"Week 2 D2",tools:["Jira","Azure OpenAI","PowerPoint","Graph API"]},
-  {num:"08",sprint:"s2",type:"product",color:"teal",icon:"💬",name:"Customer feedback synthesiser",
-   desc:"Weekly pull from Jira Product Discovery insights and Confluence feedback pages. GPT-4o clusters into themes, scores signal strength, maps to Jira epics. Friday Teams digest.",
-   auto:"5 hours/week of manual feedback collation eliminated",
-   usecase:"Customer voice mapped to Jira epics weekly — feeds roadmap directly",
-   saving:"5h/week",day:"Week 2 D3",tools:["Jira PD","Confluence","Azure OpenAI","Teams"]},
-  {num:"09",sprint:"s2",type:"daily",color:"purple",icon:"🌙",name:"End-of-day wrap-up",
-   desc:"5pm Teams message: wins from today, still-open items, emails unanswered over 4 hours, tomorrow top 3 priorities. Reuses morning brief infrastructure.",
-   auto:"15 min of EOD planning eliminated per person",
-   usecase:"Unanswered stakeholder emails flagged before end of day",
-   saving:"15 min/person/day",day:"Week 2",tools:["Outlook","Jira","Azure OpenAI","Teams"]},
-  {num:"10",sprint:"s2",type:"product",color:"blue",icon:"✅",name:"Acceptance criteria reviewer",
-   desc:"Jira webhook on story status change to In Review. GPT-4o evaluates AC across 4 dimensions: testability, completeness, clarity, edge cases. Structured Jira comment + PM alert if critical.",
-   auto:"Quality gate automated — PM not interrupted for every review",
-   usecase:"AC gaps caught before development starts, not after",
-   saving:"1h/sprint review",day:"Week 2",tools:["Jira webhook","Azure OpenAI","Jira API"]},
-  {num:"11",sprint:"s2",type:"product",color:"teal",icon:"📣",name:"Multi-audience comms engine",
-   desc:"One product brief generates 4 versions simultaneously: engineering, sales, support, exec. All as Confluence pages with Teams card linking all 4. One input, four outputs.",
-   auto:"3 hours of rewriting per release eliminated",
-   usecase:"Every release announcement tailored to 4 audiences simultaneously",
-   saving:"3h/release",day:"Week 2",tools:["Azure OpenAI","Confluence API","Teams"]},
-  {num:"12",sprint:"s2",type:"daily",color:"amber",icon:"📧",name:"Friday exec email autopilot",
-   desc:"Friday 4pm: Jira sprint data to GPT-4o exec summary. Teams approval card with 1-hour window. Outlook send on approval. Human review under 5 minutes. Zero writing.",
-   auto:"2 hours per week of writing eliminated",
-   usecase:"Leadership always informed — consistent format, zero PM effort",
-   saving:"2h/week",day:"Week 2",tools:["Jira","Azure OpenAI","Teams","Outlook"]},
-  {num:"13",sprint:"s2",type:"daily",color:"purple",icon:"🛡️",name:"Purview content classifier",
-   desc:"Every document the agent creates auto-classified with Purview sensitivity labels via Graph API. DLP policies applied automatically. AI Hub monitors agent prompts for compliance.",
-   auto:"Compliance automation — zero manual classification",
-   usecase:"All product docs governed automatically — audit-ready at all times",
-   saving:"Compliance: free",day:"Week 2",tools:["Microsoft Purview","Graph API","DLP policies"]},
-  {num:"14",sprint:"s3",type:"daily",color:"teal",icon:"📥",name:"Priority inbox intelligence",
-   desc:"9am and 2pm: top 5 emails scored by GPT-4o on urgency and sender importance. One-tap actions: draft reply, delegate, create Jira ticket. Smart filtering learns over time.",
-   auto:"45 min/person/day of email triage eliminated",
-   usecase:"Stakeholder escalations flagged before they become blockers",
-   saving:"45 min/person/day",day:"Sprint 3",tools:["Outlook","Azure OpenAI","Jira","Teams"]},
-  {num:"15",sprint:"s3",type:"daily",color:"amber",icon:"🔔",name:"Smart nudge engine",
-   desc:"12 event types: meeting in 10 mins with no prep, Jira overdue, mentioned in a doc, release notes awaiting review, Confluence page updated, PR awaiting approval, and more.",
-   auto:"Interruption cost reduced — right nudge at the right moment",
-   usecase:"No sprint item falls through the cracks — owners always reminded",
-   saving:"Interruption cost",day:"Sprint 3",tools:["Microsoft Graph","Azure OpenAI","Teams","SharePoint"]},
-  {num:"16",sprint:"s3",type:"daily",color:"blue",icon:"🎓",name:"Advanced EOD wrap-up",
-   desc:"Enhanced version with Viva Insights hours data, full day timeline, manager-level weekly summary. Meeting hours tracked, focus time measured, blocked time flagged.",
-   auto:"20 min/person/day of end-of-day reporting eliminated",
-   usecase:"Burnout signals surfaced before they impact the sprint",
-   saving:"20 min/person/day",day:"Sprint 3",tools:["Viva Insights","Azure OpenAI","Teams","Graph API"]},
-  {num:"17",sprint:"s3",type:"product",color:"green",icon:"👋",name:"Personalised onboarding bot",
-   desc:"Azure AD trigger on new hire. Role-specific 90-day Planner plan. Training assignments. Daily Teams nudges. Quiz assignments. Weekly manager progress report.",
-   auto:"3 hours of onboarding coordination per new hire eliminated",
-   usecase:"Every new PM gets a structured product context sprint in week 1",
-   saving:"3h/new hire",day:"Sprint 3",tools:["Entra ID","Planner","Teams","SharePoint"]},
-  {num:"18",sprint:"s3",type:"product",color:"purple",icon:"🧠",name:"AI knowledge quiz engine",
-   desc:"Point at any SharePoint doc or Jira epic. GPT-4o generates 5-10 questions with answers and explanations. Teams adaptive card quiz. Scores to SharePoint list.",
-   auto:"1 hour per training module prep eliminated",
-   usecase:"Product knowledge verified before releases and sprint reviews",
-   saving:"1h/module",day:"Sprint 3",tools:["Azure OpenAI","Teams","SharePoint","Copilot Studio"]},
-  {num:"19",sprint:"s4",type:"product",color:"red",icon:"🚀",name:"Agentic release orchestrator",
-   desc:"Single Jira webhook triggers the entire release chain: release notes, narration, slides, 5-audience comms, Purview labels, Viva Learning. Two human approval gates only.",
-   auto:"One full day of release work eliminated per release",
-   usecase:"Entire release communication lifecycle automated end-to-end",
-   saving:"1 day/release",day:"Sprint 4",tools:["Jira","All Azure AI","SharePoint","Confluence","Teams"]},
-  {num:"20",sprint:"s4",type:"product",color:"blue",icon:"🌐",name:"Multilingual content engine",
-   desc:"Every agent output auto-translated to French Canadian via Azure AI Translator. Meeting minutes, morning briefs, training scripts. Required for bilingual compliance.",
-   auto:"Translation cost and time eliminated for all content",
-   usecase:"Bilingual product documentation maintained automatically",
-   saving:"Translation cost",day:"Sprint 4",tools:["Azure AI Translator","All outputs","SharePoint"]},
-  {num:"21",sprint:"s4",type:"product",color:"teal",icon:"📈",name:"Viva Insights ROI dashboard",
-   desc:"Power BI combining Viva Insights time analytics with agent flow logs. Proves hours saved with Microsoft-sourced data. Real-time ROI dashboard for leadership.",
-   auto:"ROI proof automated — no manual measurement needed",
-   usecase:"Leadership ROI case made continuously, not just at capstone",
-   saving:"ROI proof",day:"Sprint 4",tools:["Viva Insights","Power BI","Agent flow logs","SharePoint"]},
-  {num:"22",sprint:"s4",type:"product",color:"amber",icon:"🔍",name:"Azure AI Search knowledge index",
-   desc:"All SharePoint content, meeting minutes, training videos indexed semantically. Agent answers any question with source citations and video timestamp search.",
-   auto:"9.3 hours/week of information searching eliminated per person",
-   usecase:"Every past product decision findable in seconds with exact source",
-   saving:"9.3h/person/week",day:"Sprint 4",tools:["Azure AI Search","SharePoint","Video Indexer"]},
-  {num:"23",sprint:"s4",type:"product",color:"purple",icon:"🎬",name:"Video training pipeline",
-   desc:"Jira epic to GPT-4o script to Azure Speech narration to Clipchamp video to Viva Learning course. 90 minutes end-to-end. Previously 2 weeks.",
-   auto:"Training video production time: 2 weeks → 90 minutes",
-   usecase:"Every product feature ships with a training video on day one",
-   saving:"2 weeks → 90 min",day:"Sprint 4",tools:["Azure OpenAI","Azure AI Speech","Clipchamp","Viva Learning"]},
+  {n:"01",s:"s1",type:"daily",c:"teal",i:"🤖",name:"Teams AI agent",desc:"Always-on conversational assistant in Teams. Searches SharePoint and Confluence, drafts emails, answers any product question with source citations.",auto:"Instant answers without pinging anyone",uc:"Living product knowledge base",save:"Foundation",day:"Day 1 · 2h"},
+  {n:"02",s:"s1",type:"personal daily",c:"amber",i:"☀️",name:"Personal readiness — 8am brief",desc:"Daily 8am Teams message: overnight emails scored by importance, Jira sprint status, calendar prep notes, GPT-4o 5-item priority list.",auto:"25 min of morning triage eliminated",uc:"Blockers surfaced before standup",save:"25 min/person/day",day:"Day 2 · 3h"},
+  {n:"03",s:"s1",type:"daily",c:"purple",i:"📚",name:"AI info directory",desc:"Self-maintaining capability directory on SharePoint. Answers 'what can you do', logs feature requests automatically.",auto:"New joiners self-serve — zero onboarding time",uc:"Any product decision findable in seconds",save:"Onboarding time",day:"Day 3 · 1h"},
+  {n:"04",s:"s1",type:"daily product",c:"blue",i:"📊",name:"Jira daily nudge + sprint card",desc:"9am personal ticket nudge per team member + team sprint health card to channel: completion %, velocity, blockers, GPT-4o narrative.",auto:"All manual sprint reporting eliminated",uc:"Leadership sees sprint without asking",save:"3h/week reporting",day:"Day 4 · 2h"},
+  {n:"05",s:"s1",type:"daily",c:"green",i:"📝",name:"Meeting chat capture",desc:"@Mona action: [text] / [owner] during Teams meetings. Captured instantly to SharePoint. End-of-meeting summary posted to channel.",auto:"No note-taker needed",uc:"Sprint review actions captured with owners",save:"2h/meeting admin",day:"Day 5 · 2h"},
+  {n:"06",s:"s2",type:"product",c:"red",i:"📋",name:"Release notes autopilot",desc:"Jira webhook on version released → GPT-4o groups resolved issues → Word doc + Confluence page + Teams notification. Fully automatic.",auto:"3–4 hours per release eliminated",uc:"Release comms automated end-to-end",save:"3–4h/release",day:"Week 3"},
+  {n:"07",s:"s2",type:"product",c:"amber",i:"🎞️",name:"AI slide deck generator",desc:"Type a Jira epic key → agent fetches epic + child stories → GPT-4o outline + speaker notes → PowerPoint via Graph API in 5 minutes.",auto:"2.5 hours of deck prep eliminated",uc:"Sprint review decks built from Jira automatically",save:"2.5h/deck",day:"Week 3"},
+  {n:"08",s:"s2",type:"product",c:"teal",i:"💬",name:"Customer feedback synthesiser",desc:"Weekly pull from Jira Product Discovery + Confluence. GPT-4o clusters into themes, scores signal strength, maps to Jira epics. Friday Teams digest.",auto:"5 hours/week of feedback collation eliminated",uc:"Customer voice mapped to epics weekly",save:"5h/week",day:"Week 3"},
+  {n:"09",s:"s2",type:"personal daily",c:"purple",i:"🌙",name:"End-of-day wrap-up",desc:"5pm Teams message per person: wins, still-open items, unanswered emails over 4h, tomorrow's top 3 priorities.",auto:"15 min of EOD planning eliminated",uc:"Unanswered stakeholder emails flagged",save:"15 min/person/day",day:"Week 4"},
+  {n:"10",s:"s2",type:"product",c:"blue",i:"✅",name:"Acceptance criteria reviewer",desc:"Jira webhook on story → In Review. GPT-4o scores AC across 4 dimensions. Structured Jira comment. PM alerted if critical gaps found.",auto:"Quality gate automated",uc:"AC gaps caught before dev starts",save:"1h/sprint",day:"Week 4"},
+  {n:"11",s:"s2",type:"product",c:"teal",i:"📣",name:"Multi-audience comms engine",desc:"One product brief → 4 audience versions simultaneously: engineering, sales, support, exec. All as Confluence pages with Teams card linking all 4.",auto:"3 hours of rewriting per release eliminated",uc:"Every release tailored to 4 audiences at once",save:"3h/release",day:"Week 4"},
+  {n:"12",s:"s2",type:"daily",c:"amber",i:"📧",name:"Friday exec email autopilot",desc:"Friday 4pm: Jira sprint data → GPT-4o exec summary → Teams approval card (1hr window) → Outlook send. Human review under 5 minutes.",auto:"2 hours/week of writing eliminated",uc:"Leadership always informed, zero PM effort",save:"2h/week",day:"Week 4"},
+  {n:"13",s:"s2",type:"daily",c:"purple",i:"🛡️",name:"Purview content classifier",desc:"Every agent-created document auto-classified with Purview sensitivity labels via Graph API. DLP policies applied. AI Hub monitors prompts.",auto:"Compliance: zero manual classification",uc:"All product docs audit-ready at all times",save:"Compliance free",day:"Week 4"},
+  {n:"14",s:"s3",type:"personal daily",c:"teal",i:"📥",name:"Priority inbox intelligence",desc:"9am and 2pm: top 5 emails scored by GPT-4o on urgency and sender importance. One-tap: draft reply, delegate, create Jira ticket.",auto:"45 min/day of email triage eliminated",uc:"Stakeholder escalations flagged early",save:"45 min/person/day",day:"Month 3"},
+  {n:"15",s:"s3",type:"personal daily",c:"amber",i:"🔔",name:"Smart nudge engine",desc:"12 event types: meeting with no prep, Jira overdue, mentioned in a doc, release notes awaiting review, Confluence updated, PR pending, and more.",auto:"Interruptions reduced — right nudge, right time",uc:"No sprint item falls through the cracks",save:"Interruption cost",day:"Month 3"},
+  {n:"16",s:"s3",type:"personal daily",c:"blue",i:"🎓",name:"Advanced EOD wrap-up",desc:"Enhanced wrap-up with Viva Insights hours data, full day timeline, focus time measured, manager-level weekly summary, burnout signals.",auto:"20 min/day of EOD reporting eliminated",uc:"Burnout signals surfaced before sprint impact",save:"20 min/person/day",day:"Month 3"},
+  {n:"17",s:"s3",type:"product",c:"green",i:"👋",name:"Personalised onboarding bot",desc:"Azure AD trigger on new hire → role-specific 90-day Planner plan → training assignments → daily nudges → weekly manager progress report.",auto:"3 hours per new hire eliminated",uc:"Every new PM gets structured product context sprint",save:"3h/new hire",day:"Month 3"},
+  {n:"18",s:"s3",type:"personal product",c:"purple",i:"🧠",name:"AI knowledge quiz engine",desc:"Point at any SharePoint doc or Jira epic → GPT-4o generates 5–10 questions with answers → Teams adaptive card quiz → scores to SharePoint.",auto:"1 hour per training module prep eliminated",uc:"Product knowledge verified before releases",save:"1h/module",day:"Month 3"},
+  {n:"19",s:"s4",type:"product",c:"red",i:"🚀",name:"Agentic release orchestrator",desc:"Single Jira webhook triggers entire release chain: notes, slides, 5-audience comms, Purview labels, Viva Learning. Two human gates only.",auto:"One full day per release eliminated",uc:"Entire release lifecycle automated",save:"1 day/release",day:"Month 4"},
+  {n:"20",s:"s4",type:"product",c:"blue",i:"🌐",name:"Multilingual content engine",desc:"Every Mona output auto-translated to French Canadian via Azure AI Translator. Meeting minutes, briefs, training scripts. EN + FR side-by-side.",auto:"Translation backlog eliminated",uc:"Bilingual compliance maintained automatically",save:"Translation cost",day:"Month 4"},
+  {n:"21",s:"s4",type:"product",c:"teal",i:"📈",name:"Viva Insights ROI dashboard",desc:"Power BI combining Viva Insights time analytics with agent flow logs. Proves hours saved with Microsoft-sourced data. Real-time for leadership.",auto:"ROI proof automated — no manual measurement",uc:"Leadership case made continuously",save:"ROI proof",day:"Month 5"},
+  {n:"22",s:"s4",type:"product",c:"amber",i:"🔍",name:"Azure AI Search index",desc:"All SharePoint, Confluence, meeting minutes, and training videos indexed semantically. Any question answered with source + page link + video timestamp.",auto:"9.3h/person/week of searching eliminated",uc:"Every past decision findable in seconds",save:"9.3h/person/week",day:"Month 5"},
+  {n:"23",s:"s4",type:"product",c:"purple",i:"🎬",name:"Video training pipeline",desc:"Jira epic → GPT-4o script → Azure Speech narration → Clipchamp video → Viva Learning course. 90 minutes end-to-end. Was 2 weeks.",auto:"2 weeks → 90 minutes per training module",uc:"Every feature ships with training video day one",save:"2 wks → 90 min",day:"Month 5"},
 ];
 
-const archLayers = [
-  {num:"1",title:"Conversation + reasoning",sub:"Copilot Studio · GPT-4.1 / GPT-5 · generative orchestration",
-   desc:"Every user interaction starts here. Copilot Studio handles natural language, reasons across all connected tools and knowledge sources, and formulates responses. Uses GPT-4.1 by default with GPT-5 preview as of Microsoft Build 2026.",
-   tools:["Copilot Studio","GPT-4.1","Generative orchestration","MCP connectors","Topics"],
-   bg:"#E1F5EE",tc:"#085041"},
-  {num:"2",title:"Autonomous action + automation",sub:"Agent flows GA · Power Automate · event triggers",
-   desc:"Agent flows (GA Microsoft Build June 2026) run automatically when triggered by events — SharePoint file created, schedule, meeting ended — without any user starting a conversation. The 8am brief, meeting minutes pipeline, and sprint health card all fire this way.",
-   tools:["Agent flows (GA)","Power Automate","Schedule triggers","Event triggers","Computer use GA"],
-   bg:"#FAEEDA",tc:"#633806"},
-  {num:"3",title:"Data + knowledge",sub:"Microsoft Graph · SharePoint · Azure AI Search · Dataverse",
-   desc:"Everything the agent knows and reads. Microsoft Graph provides real-time access to all M365 data — mail, calendar, Teams, meetings, transcripts. SharePoint stores all content. Azure AI Search enables semantic retrieval with citations.",
-   tools:["Microsoft Graph API","SharePoint","Azure AI Search","Dataverse","OneDrive"],
-   bg:"#EEEDFE",tc:"#3C3489"},
-  {num:"4",title:"Delivery surface",sub:"Teams · Outlook · Word · PowerPoint · Viva · Power Apps",
-   desc:"Where team members experience the intelligence. Teams is the primary surface. Word and PowerPoint receive auto-generated documents. Viva Insights surfaces analytics. Power Apps delivers the internal portal embedded in Teams.",
-   tools:["Microsoft Teams","Outlook","Word Online","PowerPoint","Viva Insights","Power Apps"],
-   bg:"#E6F1FB",tc:"#0C447C"},
-  {num:"5",title:"Governance + security",sub:"Microsoft Purview · Entra ID · Agent 365 · Sentinel",
-   desc:"Every agent-created document auto-classified by Purview. Every agent action auditable. Entra ID controls access. Agent 365 (GA May 2026) is the IT control plane showing every agent, action, and cost across the tenant.",
-   tools:["Microsoft Purview","Entra ID","Agent 365","Microsoft Sentinel","DLP policies"],
-   bg:"var(--bg2)",tc:"var(--text3)"},
-];
+const bgMap={teal:'#E1F5EE',amber:'#FAEEDA',purple:'#EEEDFE',blue:'#E6F1FB',green:'#EAF3DE',red:'#FCEBEB',pink:'#FBEAF0'};
 
-const tools = [
-  {name:"Copilot Studio",color:"#E1F5EE",tc:"#085041"},
-  {name:"Microsoft Teams",color:"#EEEDFE",tc:"#3C3489"},
-  {name:"SharePoint",color:"#E6F1FB",tc:"#0C447C"},
-  {name:"Microsoft Graph API",color:"#FAEEDA",tc:"#633806"},
-  {name:"Azure OpenAI",color:"#FCEBEB",tc:"#A32D2D"},
-  {name:"Azure AI Search",color:"#EAF3DE",tc:"#27500A"},
-  {name:"Power Automate",color:"#E1F5EE",tc:"#085041"},
-  {name:"Power BI Pro",color:"#EEEDFE",tc:"#3C3489"},
-  {name:"Microsoft Purview",color:"var(--bg2)",tc:"var(--text3)"},
-  {name:"Viva Insights",color:"#FAEEDA",tc:"#633806"},
-  {name:"Entra ID",color:"var(--bg2)",tc:"var(--text3)"},
-  {name:"Confluence API",color:"#E6F1FB",tc:"#0C447C"},
-  {name:"Jira + Product Discovery",color:"#FCEBEB",tc:"#A32D2D"},
-  {name:"Azure AI Speech",color:"#FAEEDA",tc:"#633806"},
-];
-
-const sprints = [
-  {cls:"s1",label:"Sprint 1",title:"Foundation",period:"Weeks 1–2 · 10 days",
-   caps:["Teams AI agent","Morning brief","AI directory","Jira daily nudge","Meeting chat capture"],
-   saving:"$88,920",dot:"#1D9E75",team:"Product enablement (10)",extra:"Pilot demo to leadership end of Week 2"},
-  {cls:"s2",label:"Sprint 2",title:"Content automation",period:"Weeks 3–4 · 10 days",
-   caps:["Release notes autopilot","Slide deck generator","Feedback synthesiser","AC reviewer","Comms engine","Exec email","Purview classifier"],
-   saving:"$141,000+",dot:"#EF9F27",team:"Product enablement (10)",extra:"Content production permanently transformed"},
-  {cls:"s3",label:"Sprint 3",title:"Personal productivity",period:"Month 3",
-   caps:["Priority inbox","Smart nudge engine","Advanced EOD","Onboarding bot","Quiz engine"],
-   saving:"$200,000+",dot:"#7F77DD",team:"Product + 1 new department",extra:"Suite becomes indispensable individually"},
-  {cls:"s4",label:"Sprint 4",title:"Enterprise scale",period:"Months 4–5",
-   caps:["Agentic orchestrator","Multilingual EN/FR","ROI dashboard","Video pipeline","AI Search index"],
-   saving:"$315,000+",dot:"#378ADD",team:"All departments (20+ people)",extra:"$9 CAD/user/month at 50 people"},
-];
-
-/* ── RENDER CAPABILITIES ── */
-function renderCaps(filter) {
-  const grid = document.getElementById('capGrid');
-  grid.innerHTML = '';
-  caps.forEach(c => {
-    const show = filter === 'all' ||
-      c.sprint === filter ||
-      (filter === 'daily' && (c.type === 'daily' || c.type === 'both')) ||
-      (filter === 'product' && (c.type === 'product' || c.type === 'both'));
-    if (!show) return;
-    const tmap = {
-      teal:'badge-teal',amber:'badge-amber',purple:'badge-purple',
-      blue:'badge-blue',green:'badge-green',red:'badge-teal'
-    };
-    const smap = {s1:'Sprint 1',s2:'Sprint 2',s3:'Sprint 3',s4:'Sprint 4'};
-    const tymap = {daily:'Daily automation',product:'Product use case',both:'Both'};
-    const tybadge = {daily:'badge-teal',product:'badge-purple',both:'badge-amber'};
-    grid.innerHTML += `
-      <div class="cap-card" data-color="${c.color}">
-        <div class="cap-card-top">
-          <div class="cap-icon" style="background:${getIconBg(c.color)};font-size:20px">${c.icon}</div>
-          <div class="cap-badges">
-            <span class="badge ${tmap[c.color]||'badge-gray'}">${smap[c.sprint]}</span>
-            <span class="badge ${tybadge[c.type]||'badge-gray'}">${tymap[c.type]}</span>
-          </div>
+function renderCaps(filter){
+  const g=document.getElementById('capGrid');
+  g.innerHTML='';
+  const smap={s1:'Sprint 1',s2:'Sprint 2',s3:'Sprint 3',s4:'Sprint 4'};
+  caps.forEach(c=>{
+    const types=c.type.split(' ');
+    const show=filter==='all'||c.s===filter||
+      (filter==='personal'&&types.includes('personal'))||
+      (filter==='daily'&&types.includes('daily'))||
+      (filter==='product'&&types.includes('product'));
+    if(!show)return;
+    const isPersonal=types.includes('personal');
+    g.innerHTML+=`<div class="cap-card" data-c="${c.c}" ${isPersonal?'style="border-color:rgba(29,158,117,0.3)"':''}>
+      <div class="cap-top">
+        <div class="cap-ico" style="background:${bgMap[c.c]||'#F5F5F5'};font-size:17px">${c.i}</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">
+          <span class="badge bk">${smap[c.s]}</span>
+          ${isPersonal?'<span class="badge bt">Personal AI</span>':''}
         </div>
-        <div class="cap-num">${c.num} · ${c.day}</div>
-        <div class="cap-name">${c.name}</div>
-        <div class="cap-desc">${c.desc}</div>
-        <div class="cap-row">
-          <div class="cap-row-label">Automates</div>
-          <div class="cap-row-val">${c.auto}</div>
-        </div>
-        <div class="cap-row">
-          <div class="cap-row-label">Use case</div>
-          <div class="cap-row-val">${c.usecase}</div>
-        </div>
-        <div class="cap-footer">
-          <div class="cap-saving">${c.saving}</div>
-          <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">
-            ${c.tools.slice(0,2).map(t=>`<span class="badge badge-gray">${t}</span>`).join('')}
-          </div>
-        </div>
-      </div>`;
+      </div>
+      <div class="cap-num">${c.n} · ${c.day}</div>
+      <div class="cap-name">${c.name}</div>
+      <div class="cap-desc">${c.desc}</div>
+      <div class="cap-row"><div class="cap-rl">Automates</div><div class="cap-rv">${c.auto}</div></div>
+      <div class="cap-row"><div class="cap-rl">Use case</div><div class="cap-rv">${c.uc}</div></div>
+      <div class="cap-foot"><div class="cap-save">${c.save}</div></div>
+    </div>`;
   });
 }
 
-function getIconBg(c) {
-  return {teal:'#E1F5EE',amber:'#FAEEDA',purple:'#EEEDFE',blue:'#E6F1FB',green:'#EAF3DE',red:'#FCEBEB'}[c]||'#F5F5F5';
-}
-
-function filterCaps(f) {
-  document.querySelectorAll('.sprint-tab').forEach((t,i) => {
-    const filters = ['all','s1','s2','s3','s4','daily','product'];
-    t.classList.toggle('active', filters[i] === f);
+function filterCaps(f){
+  document.querySelectorAll('.sprint-tab').forEach((t,i)=>{
+    const fs=['all','s1','s2','s3','s4','personal','daily','product'];
+    t.classList.toggle('active',fs[i]===f);
   });
   renderCaps(f);
 }
 
-/* ── RENDER ARCH LAYERS ── */
-function renderArch() {
-  const el = document.getElementById('archLayers');
-  archLayers.forEach((l,i) => {
-    el.innerHTML += `
-      <div class="arch-layer">
-        <div class="arch-layer-head" onclick="toggleArch(${i})">
-          <div class="arch-layer-num" style="background:${l.bg};color:${l.tc}">${l.num}</div>
-          <div>
-            <div class="arch-layer-title">${l.title}</div>
-            <div class="arch-layer-sub">${l.sub}</div>
-          </div>
-          <div class="arch-layer-tools">
-            ${l.tools.slice(0,3).map(t=>`<span class="badge badge-gray">${t}</span>`).join('')}
-          </div>
-        </div>
-        <div class="arch-body" id="arch${i}">${l.desc}</div>
-      </div>`;
-  });
-  // Expand first by default
-  document.getElementById('arch0').classList.add('open');
-}
+/* ── SPRINTS ── */
+const sprints=[
+  {cls:'s1',label:'Sprint 1',title:'Foundation',period:'Weeks 1–2',caps:['Teams AI agent','Morning brief','AI directory','Jira daily nudge','Meeting chat capture'],saving:'$88,920',dot:'#1D9E75',team:'Product enablement (10)'},
+  {cls:'s2',label:'Sprint 2',title:'Content automation',period:'Weeks 3–4',caps:['Release notes autopilot','Slide deck generator','Feedback synthesiser','AC reviewer','Comms engine','Exec email','Purview classifier'],saving:'$141,000+',dot:'#EF9F27',team:'Product enablement (10)'},
+  {cls:'s3',label:'Sprint 3',title:'Personal productivity',period:'Month 3',caps:['Priority inbox','Smart nudge engine','Advanced EOD','Onboarding bot','Quiz engine'],saving:'$200,000+',dot:'#7F77DD',team:'Product + 1 new dept'},
+  {cls:'s4',label:'Sprint 4',title:'Enterprise scale',period:'Months 4–5',caps:['Agentic orchestrator','Multilingual EN/FR','ROI dashboard','Video pipeline','AI Search index'],saving:'$315,000+',dot:'#378ADD',team:'All departments'},
+];
 
-function toggleArch(i) {
-  const b = document.getElementById('arch'+i);
-  b.classList.toggle('open');
-}
-
-/* ── RENDER TOOL CHIPS ── */
-function renderTools() {
-  const el = document.getElementById('toolChips');
-  tools.forEach(t => {
-    el.innerHTML += `
-      <div class="tool-chip">
-        <div class="tool-chip-dot" style="background:${t.tc}"></div>
-        ${t.name}
-      </div>`;
+function renderSprints(){
+  const el=document.getElementById('sprintTimeline');
+  sprints.forEach(s=>{
+    el.innerHTML+=`<div class="sprint-card ${s.cls}">
+      <div class="sl">${s.label}</div>
+      <div class="st2">${s.title}</div>
+      <div class="sp">${s.period}</div>
+      <div class="sc-list">${s.caps.map(c=>`<div class="sc-item"><div class="sc-dot" style="background:${s.dot}"></div>${c}</div>`).join('')}</div>
+      <div class="ss">${s.saving}</div>
+      <div class="ssl">CAD/year cumulative · ${s.team}</div>
+    </div>`;
   });
 }
 
-/* ── RENDER SPRINT TIMELINE ── */
-function renderSprints() {
-  const el = document.getElementById('sprintTimeline');
-  sprints.forEach(s => {
-    el.innerHTML += `
-      <div class="sprint-card ${s.cls}">
-        <div class="sprint-label">${s.label}</div>
-        <div class="sprint-title">${s.title}</div>
-        <div class="sprint-period">${s.period}</div>
-        <div class="sprint-caps">
-          ${s.caps.map(c=>`
-            <div class="sprint-cap-item">
-              <div class="sprint-cap-dot" style="background:${s.dot}"></div>
-              ${c}
-            </div>`).join('')}
-        </div>
-        <div>
-          <div class="sprint-saving">${s.saving}</div>
-          <div class="sprint-saving-label">CAD / year cumulative · ${s.team}</div>
-        </div>
-      </div>`;
-  });
+/* ── PERSONAL DETAIL ── */
+function showPersonalDetail(id){
+  const details={
+    brief:'Morning brief: Gets your overnight emails, Jira tickets, and today\'s calendar. Sends you a personalised 8am Teams message with your top 3 priorities. Open Teams → chat with Mona → say "set up my morning brief".',
+    inbox:'Priority inbox: Scores your emails by urgency and sender importance at 9am and 2pm. One-tap to draft reply, delegate, or create a Jira ticket. Coming in Sprint 3.',
+    calendar:'Calendar prep: Before each meeting, Mona sends 3 prep bullets based on past notes and Jira context. Open Teams → chat with Mona → say "prep me for today\'s meetings".',
+    nudge:'Smart nudge engine: 12 trigger types — meeting with no prep, Jira overdue, mentioned in a doc, and more. Mona nudges you at the right moment with one-tap actions. Coming in Sprint 3.',
+    eod:'End-of-day wrap-up: 5pm Teams message with today\'s wins, still-open items, and tomorrow\'s top 3 priorities. Open Teams → chat with Mona → say "set up my EOD wrap-up".',
+    draft:'AI drafting: Ask Mona to draft any email, Teams message, Jira AC, or stakeholder update. Open Teams → chat with Mona → say "draft an email to [person] about [topic]".',
+    quiz:'Knowledge quiz: Point Mona at any SharePoint doc or Jira epic → get a 5-question quiz on the content. Coming in Sprint 3.',
+  };
+  showToast(details[id]||'Coming soon.');
 }
 
-/* ── FORM SUBMIT ── */
-function submitRequest() {
-  const task = document.getElementById('f-task').value.trim();
-  const freq = document.getElementById('f-freq').value;
-  const time = document.getElementById('f-time').value.trim();
-  const team = document.getElementById('f-team').value;
-  if (!task) { document.getElementById('f-task').style.borderColor='rgba(226,75,74,0.6)'; return; }
-  document.getElementById('f-task').value = '';
-  document.getElementById('f-freq').value = '';
-  document.getElementById('f-time').value = '';
-  document.getElementById('f-team').value = '';
-  document.getElementById('f-name').value = '';
-  showToast(`Submitted to Jira Product Discovery — "${task.substring(0,40)}${task.length>40?'...':''}" ✓`);
+/* ── FORM ── */
+function submitRequest(){
+  const t=document.getElementById('f-task').value.trim();
+  if(!t){document.getElementById('f-task').style.borderColor='rgba(226,75,74,0.5)';return;}
+  ['f-task','f-freq','f-time','f-team','f-name'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  showToast('Submitted to Jira Product Discovery — "'+t.substring(0,40)+(t.length>40?'...':'')+'" ✓');
 }
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  document.getElementById('toast-msg').textContent = msg;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  document.getElementById('tmsg').textContent=msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 4000);
+  clearTimeout(window._tt);
+  window._tt=setTimeout(()=>t.classList.remove('show'),5000);
 }
 
-/* ── SCROLL ANIMATIONS ── */
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.1 });
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-/* ── NAV ACTIVE STATE ── */
-window.addEventListener('scroll', () => {
-  const sections = ['capabilities','business','architecture','sprints','jira','costs','docs','capstone','request'];
-  const scrollY = window.scrollY + 80;
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      const top = el.offsetTop;
-      const bot = top + el.offsetHeight;
-      const link = document.querySelector(`a[href="#${id}"]`);
-      if (link) link.classList.toggle('active', scrollY >= top && scrollY < bot);
-    }
-  });
-});
-
-
-/* ── THEME TOGGLE ── */
-function toggleTheme() {
-  const isLight = document.body.classList.toggle('light');
-  document.getElementById('theme-icon').textContent = isLight ? '🌙' : '☀️';
-  document.getElementById('theme-label').textContent = isLight ? 'Dark' : 'Light';
-  localStorage.setItem('mona-theme', isLight ? 'light' : 'dark');
+/* ── THEME ── */
+function toggleTheme(){
+  const l=document.body.classList.toggle('light');
+  document.getElementById('tbtn').childNodes[0].textContent=l?'🌙 ':' ☀️ ';
+  document.getElementById('tlabel').textContent=l?'Dark':'Light';
+  localStorage.setItem('mona-theme',l?'light':'dark');
 }
-// Restore saved preference
-(function() {
-  const saved = localStorage.getItem('mona-theme');
-  if (saved === 'light') {
+(function(){
+  if(localStorage.getItem('mona-theme')==='light'){
     document.body.classList.add('light');
-    document.addEventListener('DOMContentLoaded', function() {
-      var icon = document.getElementById('theme-icon');
-      var label = document.getElementById('theme-label');
-      if (icon) icon.textContent = '🌙';
-      if (label) label.textContent = 'Dark';
+    document.addEventListener('DOMContentLoaded',function(){
+      const b=document.getElementById('tbtn');
+      const tl=document.getElementById('tlabel');
+      if(b)b.childNodes[0].textContent='🌙 ';
+      if(tl)tl.textContent='Dark';
     });
   }
 })();
 
+/* ── SCROLL ANIMATIONS ── */
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});},{threshold:0.08});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+/* ── NAV ACTIVE ── */
+window.addEventListener('scroll',()=>{
+  const secs=['platform','capabilities','sprints','business','request'];
+  const y=window.scrollY+80;
+  secs.forEach(id=>{
+    const el=document.getElementById(id);
+    const lk=document.querySelector('a[href="#'+id+'"]');
+    if(el&&lk)lk.classList.toggle('active',y>=el.offsetTop&&y<el.offsetTop+el.offsetHeight);
+  });
+});
+
 /* ── INIT ── */
 renderCaps('all');
-renderArch();
-renderTools();
 renderSprints();
-
-// Re-observe newly rendered elements
-setTimeout(() => {
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-}, 100);
+setTimeout(()=>document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el)),150);
 </script>
 </body>
 </html>
